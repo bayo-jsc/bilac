@@ -46,7 +46,22 @@ func createMember(c *gin.Context) {
   if err := db.Create(&mem).Error; err != nil {
     c.JSON(500, gin.H{"error": "Something's wrong"})
   } else {
-    c.JSON(201, gin.H{"id": mem.Id, "username": mem.Username})
+    c.JSON(201, mem)
+  }
+}
+
+func showMember(c *gin.Context) {
+  db := initDB()
+  defer db.Close()
+
+  id := c.Params.ByName("id")
+  var mem Member
+
+  db.First(&mem, id)
+  if mem.Id != 0 {
+    c.JSON(200, mem)
+  } else {
+    c.JSON(404, gin.H{"error": "Member not found"})
   }
 }
 
@@ -56,6 +71,7 @@ func main() {
   // Routers config
   router.GET("/members", listMembers)
   router.POST("/members", createMember)
+  router.GET("/members/:id", showMember)
 
   router.Run(":8080")
 }
