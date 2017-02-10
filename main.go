@@ -26,13 +26,22 @@ func initDB() *gorm.DB {
   return db
 }
 
+func listMembers(c *gin.Context) {
+  db := initDB()
+  defer db.Close()
+
+  var mems []Member
+  db.Find(&mems)
+
+  c.JSON(200, mems)
+}
+
 func createMember(c *gin.Context) {
   db := initDB()
   defer db.Close()
 
   var mem Member
   c.Bind(&mem)
-
 
   if err := db.Create(&mem).Error; err != nil {
     c.JSON(500, gin.H{"error": "Something's wrong"})
@@ -45,6 +54,7 @@ func main() {
   router := gin.Default()
 
   // Routers config
+  router.GET("/members", listMembers)
   router.POST("/members", createMember)
 
   router.Run(":8080")
