@@ -87,6 +87,25 @@ func updateMember(c *gin.Context) {
   }
 }
 
+func destroyMember(c *gin.Context) {
+  db := initDB()
+  defer db.Close()
+
+  id := c.Params.ByName("id")
+  var mem Member
+
+  db.First(&mem, id)
+  if mem.Id != 0 {
+    if err := db.Delete(&mem).Error; err != nil {
+      c.JSON(500, gin.H{"result": "Something's wrong"})
+    } else {
+      c.Writer.WriteHeader(204)
+    }
+  } else {
+    c.JSON(404, gin.H{"error": "Member not found"})
+  }
+}
+
 func main() {
   router := gin.Default()
 
@@ -95,6 +114,7 @@ func main() {
   router.POST("/members", createMember)
   router.GET("/members/:id", showMember)
   router.PATCH("/members/:id", updateMember)
+  router.DELETE("/members/:id", destroyMember)
 
   router.Run(":8080")
 }
