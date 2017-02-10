@@ -65,6 +65,28 @@ func showMember(c *gin.Context) {
   }
 }
 
+func updateMember(c *gin.Context) {
+  db := initDB()
+  defer db.Close()
+
+  id := c.Params.ByName("id")
+  var mem Member
+
+  db.First(&mem, id)
+  if mem.Id == 0 {
+    c.JSON(404, gin.H{"error": "Member not found"})
+  } else {
+    var uMem Member
+    c.Bind(&uMem)
+
+    if err := db.Model(&mem).Update("username", uMem.Username).Error; err != nil {
+      c.JSON(500, gin.H{"result": "Something's wrong"})
+    } else {
+      c.JSON(200, mem)
+    }
+  }
+}
+
 func main() {
   router := gin.Default()
 
@@ -72,6 +94,7 @@ func main() {
   router.GET("/members", listMembers)
   router.POST("/members", createMember)
   router.GET("/members/:id", showMember)
+  router.PATCH("/members/:id", updateMember)
 
   router.Run(":8080")
 }
