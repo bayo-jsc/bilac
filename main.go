@@ -80,7 +80,7 @@ func updateMember(c *gin.Context) {
     c.Bind(&uMem)
 
     if err := db.Model(&mem).Update("username", uMem.Username).Error; err != nil {
-      c.JSON(500, gin.H{"result": "Something's wrong"})
+      c.JSON(500, gin.H{"error": "Something's wrong"})
     } else {
       c.JSON(200, mem)
     }
@@ -97,7 +97,7 @@ func destroyMember(c *gin.Context) {
   db.First(&mem, id)
   if mem.Id != 0 {
     if err := db.Delete(&mem).Error; err != nil {
-      c.JSON(500, gin.H{"result": "Something's wrong"})
+      c.JSON(500, gin.H{"error": "Something's wrong"})
     } else {
       c.Writer.WriteHeader(204)
     }
