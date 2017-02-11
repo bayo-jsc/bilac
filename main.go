@@ -116,6 +116,7 @@ func main() {
   // Normal routers
   router.LoadHTMLGlob("templates/*.tpl")
   router.Static("node_modules", "./node_modules")
+  router.Static("static", "./static")
   router.GET("/", serveFE)
 
   // API v1 routers
