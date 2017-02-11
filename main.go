@@ -106,15 +106,27 @@ func destroyMember(c *gin.Context) {
   }
 }
 
+func serveFE(c *gin.Context) {
+  c.HTML(200, "index.tpl", gin.H{})
+}
+
 func main() {
   router := gin.Default()
 
-  // Routers config
-  router.GET("/members", listMembers)
-  router.POST("/members", createMember)
-  router.GET("/members/:id", showMember)
-  router.PATCH("/members/:id", updateMember)
-  router.DELETE("/members/:id", destroyMember)
+  // Normal routers
+  router.LoadHTMLGlob("templates/*.tpl")
+  router.Static("node_modules", "./node_modules")
+  router.GET("/", serveFE)
+
+  // API v1 routers
+  v1 := router.Group("/api/v1")
+  {
+    v1.GET("/members", listMembers)
+    v1.POST("/members", createMember)
+    v1.GET("/members/:id", showMember)
+    v1.PATCH("/members/:id", updateMember)
+    v1.DELETE("/members/:id", destroyMember)
+  }
 
   router.Run(":8080")
 }
