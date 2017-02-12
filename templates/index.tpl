@@ -25,6 +25,18 @@
         <td>${ mem.id }</td>
         <td>${ mem.username }</td>
       </tr>
+      <tr>
+        <td>#</td>
+        <td>
+          <input type="text"
+            placeholder="username"
+            v-model="newMem.username"
+            v-on:keyup.enter="createMember">
+        </td>
+        <td>
+          <button class="button button-default" type="button" v-on:click="createMember">+ Add</button>
+        </td>
+      </tr>
     </tbody>
   </table>
 

@@ -4,6 +4,8 @@ new Vue({
 
   data: {
     members: [],
+    newMem: {},
+    errors: {},
   },
 
   mounted() {
@@ -11,7 +13,20 @@ new Vue({
       .then(res => {
         this.members = res.data
       }, err => {
-        console.log(err)
+        this.errors = err.responseJSON.error
       })
   },
+
+  methods: {
+    createMember() {
+      axios.post('/api/v1/members', {
+        username: this.newMem.username
+      }).then(res => {
+          this.errors = {}
+          this.members.push(res.data)
+        }, err => {
+          this.errors = err.responseJSON.errors
+        })
+    }
+  }
 })
