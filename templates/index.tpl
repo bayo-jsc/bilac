@@ -21,9 +21,10 @@
     </thead>
 
     <tbody>
-      <tr v-for="mem in members">
+      <tr v-for="(mem, index) in members">
         <td>${ mem.id }</td>
         <td>${ mem.username }</td>
+        <td><button class="button button-clear" v-on:click="destroyMember(index)">x Remove</button></td>
       </tr>
       <tr>
         <td>#</td>

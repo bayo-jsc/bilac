@@ -27,6 +27,15 @@ new Vue({
         }, err => {
           this.errors = err.responseJSON.errors
         })
-    }
+    },
+
+    destroyMember(index) {
+      axios.delete('/api/v1/members/' + this.members[index].id)
+        .then(res => {
+          this.members.splice(index, 1)
+        }, err => {
+          this.errors = err.responseJSON.errors
+        })
+    },
   }
 })
