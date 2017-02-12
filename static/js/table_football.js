@@ -5,7 +5,6 @@ new Vue({
   data: {
     members: [],
     newMem: {},
-    errors: {},
   },
 
   mounted() {
@@ -13,7 +12,7 @@ new Vue({
       .then(res => {
         this.members = res.data
       }, err => {
-        this.errors = err.responseJSON.error
+        console.log(err)
       })
   },
 
@@ -22,10 +21,10 @@ new Vue({
       axios.post('/api/v1/members', {
         username: this.newMem.username
       }).then(res => {
-          this.errors = {}
           this.members.push(res.data)
+          this.newMem = {}
         }, err => {
-          this.errors = err.responseJSON.errors
+          console.log(err)
         })
     },
 
@@ -34,7 +33,7 @@ new Vue({
         .then(res => {
           this.members.splice(index, 1)
         }, err => {
-          this.errors = err.responseJSON.errors
+          console.log(err)
         })
     },
   }
