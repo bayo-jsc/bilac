@@ -114,10 +114,11 @@ func groupMembers(c *gin.Context) {
   var chosen []Member
   db.Order("random()").Find(&chosen)
 
-  // If number of player is odd, remove last one
-  // 'coz the list is already randomized
+  // If number of player is odd, the last one won't play
+  // 'coz the list is already randomized, it's totally fair!
+  var dropMem Member
   if len(chosen) % 2 != 0 {
-    dropMem := chosen[len(chosen)-1]
+    dropMem = chosen[len(chosen)-1]
     if dropMem.Id != 0 {
       db.Model(&dropMem).Update("group_id", nil)
     }
@@ -134,7 +135,7 @@ func groupMembers(c *gin.Context) {
     db.Model(&chosen[k]).Update("group_id", g)
   }
 
-  c.JSON(200, chosen)
+  c.JSON(200, append(chosen, dropMem))
 }
 
 func serveFE(c *gin.Context) {
