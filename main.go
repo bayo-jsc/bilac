@@ -11,6 +11,7 @@ import (
 type Member struct {
   Id int `gorm:"AUTO_INCREMENT" json:"id"`
   Username string `gorm:"not null;unique" json:"username"`
+  GroupId int `gorm:"-" json:"group_id"`
 }
 
 func initDB() *gorm.DB {
@@ -118,6 +119,16 @@ func groupMembers(c *gin.Context) {
   // 'coz the list is already randomized
   if len(chosen) % 2 != 0 {
     chosen = chosen[:len(chosen)-1]
+  }
+
+  // init group id with 0
+  // for each 2-player (start with 0) increase group id by 1
+  g := 0
+  for k, _ := range chosen {
+    if k % 2 == 0 {
+      g += 1
+    }
+    db.Model(&chosen[k]).Update("group_id", g)
   }
 
   c.JSON(200, chosen)
