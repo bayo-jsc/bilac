@@ -1,7 +1,6 @@
 package main
 
 import (
-
   "github.com/gin-gonic/gin"
   "github.com/jinzhu/gorm"
 
@@ -11,7 +10,7 @@ import (
 type Member struct {
   Id int `gorm:"AUTO_INCREMENT" json:"id"`
   Username string `gorm:"not null;unique" json:"username"`
-  GroupId int `gorm:"-" json:"group_id"`
+  GroupId int `gorm:"not null" json:"group_id"`
 }
 
 func initDB() *gorm.DB {
@@ -118,6 +117,10 @@ func groupMembers(c *gin.Context) {
   // If number of player is odd, remove last one
   // 'coz the list is already randomized
   if len(chosen) % 2 != 0 {
+    dropMem := chosen[len(chosen)-1]
+    if dropMem.Id != 0 {
+      db.Model(&dropMem).Update("group_id", nil)
+    }
     chosen = chosen[:len(chosen)-1]
   }
 
@@ -156,7 +159,7 @@ func main() {
     v1.GET("/members/:id", showMember)
     v1.PATCH("/members/:id", updateMember)
     v1.DELETE("/members/:id", destroyMember)
-    v1.GET("/draw", groupMembers)
+    v1.PATCH("/draw", groupMembers)
   }
 
   router.Run(":8080")
