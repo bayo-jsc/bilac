@@ -36,5 +36,14 @@ new Vue({
           console.log(err)
         })
     },
+
+    draw() {
+      axios.patch('/api/v1/draw')
+        .then(res => {
+          this.members = res.data
+        }, err => {
+          console.log(err)
+        })
+    },
   }
 })

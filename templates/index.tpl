@@ -15,7 +15,7 @@
   <table id='tf'>
     <thead>
       <tr>
-        <th>ID</th>
+        <th>Team</th>
         <th>Username</th>
         <th></th>
       </tr>
@@ -23,7 +23,7 @@
 
     <tbody>
       <tr v-for="(mem, index) in members">
-        <td>${ mem.id }</td>
+        <td>${ mem.team_id }</td>
         <td>${ mem.username }</td>
         <td>
           <button class="button button-clear" v-on:click="destroyMember(index)">x Remove</button>
@@ -39,6 +39,11 @@
         </td>
         <td>
           <button class="button button-default" type="button" v-on:click="createMember">+ Add</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button class="button button-default" type="button" v-on:click="draw">DRAW</button>
         </td>
       </tr>
     </tbody>

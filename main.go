@@ -10,7 +10,7 @@ import (
 type Member struct {
   Id int `gorm:"AUTO_INCREMENT" json:"id"`
   Username string `gorm:"not null;unique" json:"username"`
-  GroupId int `gorm:"not null" json:"group_id"`
+  TeamId int `gorm:"not null" json:"team_id"`
 }
 
 func initDB() *gorm.DB {
@@ -32,7 +32,7 @@ func listMembers(c *gin.Context) {
   defer db.Close()
 
   var mems []Member
-  db.Find(&mems)
+  db.Order("team_id").Find(&mems)
 
   c.JSON(200, mems)
 }
@@ -120,7 +120,7 @@ func groupMembers(c *gin.Context) {
   if len(chosen) % 2 != 0 {
     dropMem = chosen[len(chosen)-1]
     if dropMem.Id != 0 {
-      db.Model(&dropMem).Update("group_id", nil)
+      db.Model(&dropMem).Update("team_id", nil)
     }
     chosen = chosen[:len(chosen)-1]
   }
@@ -132,10 +132,15 @@ func groupMembers(c *gin.Context) {
     if k % 2 == 0 {
       g += 1
     }
-    db.Model(&chosen[k]).Update("group_id", g)
+    db.Model(&chosen[k]).Update("team_id", g)
   }
 
-  c.JSON(200, append(chosen, dropMem))
+  if dropMem.Id != 0 {
+    // prepend dropMem to chosen
+    c.JSON(200, append([]Member{dropMem}, chosen...))
+  } else {
+    c.JSON(200, chosen)
+  }
 }
 
 func serveFE(c *gin.Context) {
