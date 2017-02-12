@@ -1,6 +1,7 @@
 package main
 
 import (
+
   "github.com/gin-gonic/gin"
   "github.com/jinzhu/gorm"
 
@@ -106,9 +107,26 @@ func destroyMember(c *gin.Context) {
   }
 }
 
+func groupMembers(c *gin.Context) {
+  db := initDB()
+  defer db.Close()
+
+  var chosen []Member
+  db.Order("random()").Find(&chosen)
+
+  // If number of player is odd, remove last one
+  // 'coz the list is already randomized
+  if len(chosen) % 2 != 0 {
+    chosen = chosen[:len(chosen)-1]
+  }
+
+  c.JSON(200, chosen)
+}
+
 func serveFE(c *gin.Context) {
   c.HTML(200, "index.tpl", gin.H{})
 }
+
 
 func main() {
   router := gin.Default()
@@ -127,6 +145,7 @@ func main() {
     v1.GET("/members/:id", showMember)
     v1.PATCH("/members/:id", updateMember)
     v1.DELETE("/members/:id", destroyMember)
+    v1.GET("/draw", groupMembers)
   }
 
   router.Run(":8080")
