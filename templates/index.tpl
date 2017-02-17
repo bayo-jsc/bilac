@@ -48,6 +48,15 @@
       </tr>
     </tbody>
   </table>
+  
+  <div>
+    Rule:
+    <ol>
+      <li>Each match is 3 minutes</li>
+      <li>Last position team lost 10k VND/each member</li>
+      <li>Second position from bottom lost 5k VND/each member</li>
+    </ol>
+  </div>
 
   <script src="static/js/table_football.js"></script>
 </body>
