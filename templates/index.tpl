@@ -14,9 +14,14 @@
 <body>
   <div id="app">
     <select multiple v-model="members">
-      <option v-for="member in membersList" :value="member">${ member }</option>
+      <option v-for="member in membersList" :value="member">${ member.username }</option>
     </select>
-  
+
+    <div>
+      Create new member:
+      <input type="text" v-model="newMember">
+    </div>
+
     <table id='tf'>
       <thead>
         <tr>
@@ -54,7 +59,7 @@
       </tbody>
     </table>
   </div>
-  
+
   <div>
     Rule:
     <ol>

@@ -2,9 +2,9 @@ new Vue({
   el: '#app',
   delimiters: ['${', '}'],
 
-  data: {
+  data() {
     return {
-      membersList: [
+      membersName: [
         'dungpt',
         'hiepph',
         'anhmt',
@@ -13,9 +13,30 @@ new Vue({
         'khainv',
         'dungnt',
         'hoannx',
-      ]
+      ],
       members: [],
       newMem: {},
+      newMember: '',
+    }
+  },
+
+  computed: {
+    membersList() {
+      return this.membersName.map((member, index) => ({
+        id: index,
+        username: member,
+        team_id: 0,
+      }))
+    }
+  },
+
+  watch: {
+    newMember(value) {
+      if (value !== '') {
+        axios.post('api/v1/members', {
+
+        })
+      }
     }
   },
 
@@ -47,6 +68,14 @@ new Vue({
         }, err => {
           console.log(err)
         })
+    },
+
+    getMembers() {
+      axios
+      .get('/api/v1/members')
+      .then(response => {
+        this.$set(this, 'membersList', response.data)
+      })
     },
 
     draw() {
