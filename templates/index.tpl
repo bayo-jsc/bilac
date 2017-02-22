@@ -13,6 +13,7 @@
 </head>
 <body>
   <div id="app">
+    Select players:
     <select multiple v-model="members">
       <option v-for="member in membersList" :value="member">${ member.username }</option>
     </select>
