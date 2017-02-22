@@ -3,8 +3,20 @@ new Vue({
   delimiters: ['${', '}'],
 
   data: {
-    members: [],
-    newMem: {},
+    return {
+      membersList: [
+        'dungpt',
+        'hiepph',
+        'anhmt',
+        'bangcht',
+        'anhnq',
+        'khainv',
+        'dungnt',
+        'hoannx',
+      ]
+      members: [],
+      newMem: {},
+    }
   },
 
   mounted() {
