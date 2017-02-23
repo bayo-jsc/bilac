@@ -14,13 +14,14 @@
 <body>
   <div id="app">
     Select players:
-    <select multiple v-model="members">
-      <option v-for="member in membersList" :value="member">${ member.username }</option>
+    <select multiple v-model="players" style="height: auto">
+      <option v-for="member in members" :value="member">${ member.username }</option>
     </select>
 
     <div>
       Create new member:
-      <input type="text" v-model="newMember">
+      <input type="text" v-model="newMember" @keydown.enter="createMember">
+      <button @click="createMember">Create member</button>
     </div>
 
     <table id='tf'>
@@ -33,14 +34,14 @@
       </thead>
 
       <tbody>
-        <tr v-for="(mem, index) in members">
+        <tr v-for="(mem, index) in players">
           <td>${ mem.team_id }</td>
           <td>${ mem.username }</td>
           <td>
             <button class="button button-clear" v-on:click="destroyMember(index)">x Remove</button>
           </td>
         </tr>
-        <tr>
+        <!-- <tr>
           <td>#</td>
           <td>
             <input type="text"
@@ -51,7 +52,7 @@
           <td>
             <button class="button button-default" type="button" v-on:click="createMember">+ Add</button>
           </td>
-        </tr>
+        </tr> -->
         <tr>
           <td>
             <button class="button button-default" type="button" v-on:click="draw">DRAW</button>

@@ -4,58 +4,24 @@ new Vue({
 
   data() {
     return {
-      membersName: [
-        'dungpt',
-        'hiepph',
-        'anhmt',
-        'bangcht',
-        'anhnq',
-        'khainv',
-        'dungnt',
-        'hoannx',
-      ],
       members: [],
+      players: [],
       newMem: {},
       newMember: '',
     }
   },
 
-  computed: {
-    membersList() {
-      return this.membersName.map((member, index) => ({
-        id: index,
-        username: member,
-        team_id: 0,
-      }))
-    }
-  },
-
-  watch: {
-    newMember(value) {
-      if (value !== '') {
-        axios.post('api/v1/members', {
-
-        })
-      }
-    }
-  },
-
   mounted() {
-    axios.get('api/v1/members')
-      .then(res => {
-        this.members = res.data
-      }, err => {
-        console.log(err)
-      })
+    this.getMembers()
   },
 
   methods: {
     createMember() {
       axios.post('/api/v1/members', {
-        username: this.newMem.username
+        username: this.newMember
       }).then(res => {
           this.members.push(res.data)
-          this.newMem = {}
+          this.$set(this, 'newMember', '')
         }, err => {
           console.log(err)
         })
@@ -71,11 +37,12 @@ new Vue({
     },
 
     getMembers() {
-      axios
-      .get('/api/v1/members')
-      .then(response => {
-        this.$set(this, 'membersList', response.data)
-      })
+      axios.get('api/v1/members')
+        .then(res => {
+          this.$set(this, 'members', res.data)
+        }, err => {
+          console.log(err)
+        })
     },
 
     draw() {
