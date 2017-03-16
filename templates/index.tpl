@@ -24,7 +24,7 @@
       <button @click="createMember">Create member</button>
     </div>
 
-    <table id='tf'>
+    <table id='tf' v-show="!isShowScoreboard">
       <thead>
         <tr>
           <th>Team</th>
@@ -41,21 +41,36 @@
             <button class="button button-clear" v-on:click="destroyMember(index)">x Remove</button>
           </td>
         </tr>
-        <!-- <tr>
-          <td>#</td>
-          <td>
-            <input type="text"
-              placeholder="username"
-              v-model="newMem.username"
-              v-on:keyup.enter="createMember">
-          </td>
-          <td>
-            <button class="button button-default" type="button" v-on:click="createMember">+ Add</button>
-          </td>
-        </tr> -->
         <tr>
           <td>
             <button class="button button-default" type="button" v-on:click="draw">DRAW</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table id="scoreboard" v-show="isViewScoreboard">
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>Point</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr v-for="(team, index) in teams">
+          <td>
+            ${ team.id }
+            <span v-for="mem in team.members">
+              ${ mem.username }
+            </span>
+          </td>
+          <td>
+            ${ mem.point }
+          </td>
+          <td>
+            ${ mem.score }
           </td>
         </tr>
       </tbody>
