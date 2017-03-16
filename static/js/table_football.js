@@ -7,6 +7,7 @@ new Vue({
       members: [],
       players: [],
       oldPlayers: [],
+      teams: [],
       newMem: {},
       newMember: '',
       isViewScoreboard: true,

@@ -24,7 +24,11 @@
       <button @click="createMember">Create member</button>
     </div>
 
-    <table id='tf' v-show="!isShowScoreboard">
+    <button @click="isViewScoreboard = !isViewScoreboard">
+      Change view
+    </button>
+
+    <table id='tf' v-show="!isViewScoreboard">
       <thead>
         <tr>
           <th>Team</th>
