@@ -6,8 +6,10 @@ new Vue({
     return {
       members: [],
       players: [],
+      oldPlayers: [],
       newMem: {},
       newMember: '',
+      isViewScoreboard: true,
     }
   },
 
