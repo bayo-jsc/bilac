@@ -1,6 +1,6 @@
 {
   "name": "bilac",
-  "version": "1.1.0",
+  "version": "1.0.2",
   "description": "Bayo's Table Football drawboard",
   "main": "index.js",
   "repository": "git@github.com:bayo-jsc/bilac.git",

@@ -1,11 +1,8 @@
 package main
 
 import (
-	"os"
-
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"gopkg.in/gomail.v2"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -115,19 +112,6 @@ func destroyMember(c *gin.Context) {
 }
 
 func groupMembers(c *gin.Context) {
-	// Email setup
-	d := gomail.NewDialer("mail.securemail.vn", 25, os.Getenv("EMAIL"), os.Getenv("PASSWORD"))
-	s, err := d.Dial()
-	if err != nil {
-		panic(err)
-	}
-
-	m := gomail.NewMessage()
-	m.SetHeader("From", os.Getenv("EMAIL"))
-	m.SetAddressHeader("To", "hoanghiepjp96@gmail.com", "Hiep")
-	m.SetHeader("Subject", "Test")
-	m.SetBody("text/plain", "Hello")
-
 	db := initDB()
 	defer db.Close()
 
@@ -156,11 +140,6 @@ func groupMembers(c *gin.Context) {
 	}
 
 	if dropMem.Id != 0 {
-		// Send email
-		if err := gomail.Send(s, m); err != nil {
-			panic(err)
-		}
-
 		// prepend dropMem to chosen
 		c.JSON(200, append([]Member{dropMem}, chosen...))
 	} else {
