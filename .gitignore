@@ -1,3 +1,6 @@
+# main
+bilac
+
 # Go stuff
 db/*.db
 vendor/
@@ -6,3 +9,6 @@ manifest.json
 
 # JS stuff
 node_modules/
+
+# ENV
+.env
