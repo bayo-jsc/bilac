@@ -1,5 +1,8 @@
 # Go stuff
 db/*.db
+vendor/
+lock.json
+manifest.json
 
 # JS stuff
 node_modules/
