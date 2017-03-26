@@ -123,7 +123,7 @@ func groupMembers(c *gin.Context) {
 	}
 
 	m := gomail.NewMessage()
-	m.SetHeader("From", "hiepph@bayo.vn")
+	m.SetHeader("From", os.Getenv("EMAIL"))
 	m.SetAddressHeader("To", "hoanghiepjp96@gmail.com", "Hiep")
 	m.SetHeader("Subject", "Test")
 	m.SetBody("text/plain", "Hello")
