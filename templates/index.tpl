@@ -50,6 +50,8 @@
       </tr>
     </tbody>
   </table>
+  
+  <a href="https://paypal.me/nqa" target="_blank">DONATE</a>
 
   <script src="static/js/table_football.js"></script>
 </body>
