@@ -1,5 +1,5 @@
 + [@dungpt3003](https://github.com/dungpt3003): $2
 + [@bangcht](https://github.com/bangcht): $2
 + Nguyễn Xuân Hoàn: $2
-+ [@anhmt](https://github.com/anmht): $0.02
-+ [@anhnq](https://github.com/anhnq): $0.01
++ [@theanht1](https://github.com/theanht1): $0.02
++ [@imcvampire](https://github.com/imcvampire): $0.01
