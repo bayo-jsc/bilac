@@ -1,14 +1,20 @@
 ## Development
 
-+ Get Go's dependencies manager:
-
-```
-$ go get -u github.com/golang/dep/...
-```
-
 + Install dependencies:
 
 ```
-$ dep init
-$ dep ensure -update
+go get -t -v ./...
+yarn
+```
+
++ Build:
+
+```
+go build -v
+```
+
++ Start server (port `8080`):
+
+```
+./bilac
 ```
