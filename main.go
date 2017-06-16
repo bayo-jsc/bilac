@@ -1,10 +1,15 @@
 package main
 
 import (
+	"os"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 
 	_ "github.com/mattn/go-sqlite3"
+)
+
+var (
+	BILAC_PORT string = os.Getenv("BILAC_PORT")
 )
 
 type Member struct {
@@ -151,6 +156,12 @@ func serveFE(c *gin.Context) {
 	c.HTML(200, "index.tpl", gin.H{})
 }
 
+func init() {
+	if BILAC_PORT == "" {
+		BILAC_PORT = "8080"
+	}
+}
+
 func main() {
 	router := gin.Default()
 
@@ -171,5 +182,5 @@ func main() {
 		v1.PATCH("/draw", groupMembers)
 	}
 
-	router.Run(":8080")
+	router.Run(":" + BILAC_PORT)
 }
