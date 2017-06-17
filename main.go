@@ -184,6 +184,8 @@ func lastTournament(c *gin.Context) {
 	var tour models.Tournament
 	db.Order("created_at desc").First(&tour)
 
+	db.Model(tour).Related(&tour.Matches)
+
 	c.JSON(200, tour)
 }
 
