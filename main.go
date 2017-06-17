@@ -259,14 +259,9 @@ func listMatchesOfTournament(c *gin.Context) {
 	var matches []models.Match
 	db.Model(&tour).Related(&matches)
 
-	for _, match:= range matches {
-		c.JSON(200, match)
-		return
-		var team1 models.Team
-		db.Model(&match).Related(&team1)
-		c.JSON(200, team1)
-		return
-		db.Model(match).Related(&match.Team2)
+	for i, _:= range matches {
+		db.Model(matches[i]).Related(&matches[i].Team1, "Team1")
+		db.Model(matches[i]).Related(&matches[i].Team2, "Team2")
 	}
 	c.JSON(200, matches)
 }
@@ -330,7 +325,7 @@ func main() {
 		v1.GET("/tournaments/:id/teams", listTeamsOfTournament)
 
 		v1.GET("/tournaments/:id/matches", listMatchesOfTournament)
-		v1.GET("/tournaments/:id/matches/:match_id", updateMatchScore)
+		v1.PATCH("/tournaments/:id/matches/:match_id", updateMatchScore)
 	}
 
 	router.Run(":" + BILAC_PORT)
