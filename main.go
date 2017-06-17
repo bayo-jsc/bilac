@@ -177,6 +177,16 @@ func listTournaments(c *gin.Context) {
 	c.JSON(200, tours)
 }
 
+func lastTournament(c *gin.Context) {
+	db := initDB()
+	defer db.Close()
+
+	var tour models.Tournament
+	db.Order("created_at desc").First(&tour)
+
+	c.JSON(200, tour)
+}
+
 func createTournament(c *gin.Context) {
 	db := initDB()
 	defer db.Close()
@@ -324,6 +334,8 @@ func main() {
 
 		v1.GET("/tournaments", listTournaments)
 		v1.POST("/tournaments", createTournament)
+
+		v1.GET("/last-tournament", lastTournament)
 
 		v1.GET("/tournaments/:id/teams", listTeamsOfTournament)
 
