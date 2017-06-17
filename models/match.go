@@ -6,9 +6,12 @@ import (
 
 type Match struct {
 	gorm.Model
-	Tournament Tournament `gorm:"ForeignKey:TournamentRefer"`
-	Team1 Team `gorm:"ForeignKey:TeamRefer"`
-	Team2 Team `gorm:"ForeignKey:TeamRefer"`
+	Tournament Tournament `gorm:"ForeignKey:TournamentID"`
+	TournamentID uint
+	Team1 Team `gorm:"ForeignKey:Team1ID"`
+	Team1ID uint
+	Team2 Team `gorm:"ForeignKey:Team2ID"`
+	Team2ID uint
 	Team1Score int
 	Team2Score int
 }
