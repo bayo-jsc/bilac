@@ -196,7 +196,7 @@ func createTournament(c *gin.Context) {
 	if err := db.Create(&tour).Error; err == nil {
 		c.JSON(500, gin.H{"error": "Something's wrong"})
 	} else {
-		// Create team
+		// Create teams
 		for i := 0; i < len(teams_raw); i++ {
 			var member1 models.Member
 			var member2 models.Member
@@ -212,7 +212,7 @@ func createTournament(c *gin.Context) {
 			db.Create(&team)
 		}
 
-		// Create match
+		// Create matches
 		var teams []models.Team
 		db.Model(&tour).Related(&teams)
 		for i := 0; i < len(teams)-1; i++ {
@@ -221,8 +221,6 @@ func createTournament(c *gin.Context) {
 					Tournament: tour,
 					Team1: teams[i],
 					Team2: teams[j],
-					Team1Score: 0,
-					Team2Score: 0,
 				}
 
 				db.Create(&match)
@@ -232,19 +230,73 @@ func createTournament(c *gin.Context) {
 	}
 }
 
-func showTeam(c *gin.Context) {
+func listTeamsOfTournament(c *gin.Context) {
 	db := initDB()
 	defer db.Close()
 
 	id := c.Params.ByName("id")
-	var team models.Team
-	db.Find(&team, id)
+	var tour models.Tournament
+	db.Find(&tour, id)
 
-	c.JSON(200, team)
+	var teams []models.Team
+	db.Model(&tour).Related(&teams)
+
+	for i := 0; i < len(teams); i++ {
+		db.Model(teams[i]).Related(&teams[i].Member1, "Member1")
+		db.Model(teams[i]).Related(&teams[i].Member2, "Member2")
+	}
+	c.JSON(200, teams)
 }
 
 func listMatchesOfTournament(c *gin.Context) {
+	db := initDB()
+	defer db.Close()
 
+	tour_id := c.Params.ByName("id")
+	var tour models.Tournament
+	db.Find(&tour, tour_id)
+
+	var matches []models.Match
+	db.Model(&tour).Related(&matches)
+
+	for _, match:= range matches {
+		c.JSON(200, match)
+		return
+		var team1 models.Team
+		db.Model(&match).Related(&team1)
+		c.JSON(200, team1)
+		return
+		db.Model(match).Related(&match.Team2)
+	}
+	c.JSON(200, matches)
+}
+
+func updateMatchScore(c *gin.Context)  {
+	db := initDB()
+	defer db.Close()
+
+	tour_id := c.Params.ByName("id")
+	var tour models.Tournament
+	db.Find(&tour, tour_id)
+
+	match_id := c.Params.ByName("match_id")
+	var match models.Match
+	db.Find(&match, match_id)
+
+	var score struct{
+		ScoreTeam1 int `json:"score_team_1"`
+		ScoreTeam2 int `json:"score_team_2"`
+	}
+	c.BindJSON(&score)
+
+	match.Team1Score = score.ScoreTeam1
+	match.Team2Score = score.ScoreTeam2
+
+	if err := db.Save(&match).Error; err == nil {
+		c.JSON(201, match)
+	} else {
+		c.JSON(500, gin.H{"error": err})
+	}
 }
 
 func init() {
@@ -275,7 +327,10 @@ func main() {
 		v1.GET("/tournaments", listTournaments)
 		v1.POST("/tournaments", createTournament)
 
-		v1.GET("/teams/:id", showTeam)
+		v1.GET("/tournaments/:id/teams", listTeamsOfTournament)
+
+		v1.GET("/tournaments/:id/matches", listMatchesOfTournament)
+		v1.GET("/tournaments/:id/matches/:match_id", updateMatchScore)
 	}
 
 	router.Run(":" + BILAC_PORT)
