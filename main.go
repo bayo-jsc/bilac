@@ -3,20 +3,18 @@ package main
 import (
 	"os"
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
+	//"github.com/jinzhu/gorm"
 
 	_ "github.com/mattn/go-sqlite3"
+
+	"./models"
+	"github.com/jinzhu/gorm"
+	//"fmt"
 )
 
 var (
 	BILAC_PORT string = os.Getenv("BILAC_PORT")
 )
-
-type Member struct {
-	Id       int    `gorm:"AUTO_INCREMENT" json:"id"`
-	Username string `gorm:"not null;unique" json:"username"`
-	TeamId   int    `gorm:"not null" json:"team_id"`
-}
 
 func initDB() *gorm.DB {
 	db, err := gorm.Open("sqlite3", "db/table_football.db")
@@ -25,10 +23,23 @@ func initDB() *gorm.DB {
 	}
 
 	db.LogMode(true)
-	if !db.HasTable(&Member{}) {
-		db.CreateTable(&Member{})
-		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&Member{})
+	// Create table
+	if !db.HasTable(&models.Member{}) {
+		db.CreateTable(&models.Member{})
 	}
+
+	if !db.HasTable(&models.Tournament{}) {
+		db.CreateTable(&models.Tournament{})
+	}
+
+	if !db.HasTable(&models.Match{}) {
+		db.CreateTable(&models.Match{})
+	}
+
+	if !db.HasTable(&models.Team{}) {
+		db.CreateTable(&models.Team{})
+	}
+
 	return db
 }
 
@@ -36,8 +47,8 @@ func listMembers(c *gin.Context) {
 	db := initDB()
 	defer db.Close()
 
-	var mems []Member
-	db.Order("team_id").Find(&mems)
+	var mems []models.Member
+	db.Find(&mems)
 
 	c.JSON(200, mems)
 }
@@ -46,7 +57,7 @@ func createMember(c *gin.Context) {
 	db := initDB()
 	defer db.Close()
 
-	var mem Member
+	var mem models.Member
 	c.Bind(&mem)
 
 	if mem.Username == "" {
@@ -65,10 +76,10 @@ func showMember(c *gin.Context) {
 	defer db.Close()
 
 	id := c.Params.ByName("id")
-	var mem Member
+	var mem models.Member
 
 	db.First(&mem, id)
-	if mem.Id != 0 {
+	if mem.ID != 0 {
 		c.JSON(200, mem)
 	} else {
 		c.JSON(404, gin.H{"error": "Member not found"})
@@ -80,13 +91,13 @@ func updateMember(c *gin.Context) {
 	defer db.Close()
 
 	id := c.Params.ByName("id")
-	var mem Member
+	var mem models.Member
 
 	db.First(&mem, id)
-	if mem.Id == 0 {
+	if mem.ID == 0 {
 		c.JSON(404, gin.H{"error": "Member not found"})
 	} else {
-		var uMem Member
+		var uMem models.Member
 		c.Bind(&uMem)
 
 		if err := db.Model(&mem).Update("username", uMem.Username).Error; err != nil {
@@ -102,10 +113,10 @@ func destroyMember(c *gin.Context) {
 	defer db.Close()
 
 	id := c.Params.ByName("id")
-	var mem Member
+	var mem models.Member
 
 	db.First(&mem, id)
-	if mem.Id != 0 {
+	if mem.ID != 0 {
 		if err := db.Delete(&mem).Error; err != nil {
 			c.JSON(500, gin.H{"error": "Something's wrong"})
 		} else {
@@ -120,15 +131,15 @@ func groupMembers(c *gin.Context) {
 	db := initDB()
 	defer db.Close()
 
-	var chosen []Member
+	var chosen []models.Member
 	db.Order("random()").Find(&chosen)
 
 	// If number of player is odd, the last one won't play
 	// 'coz the list is already randomized, it's totally fair!
-	var dropMem Member
+	var dropMem models.Member
 	if len(chosen)%2 != 0 {
 		dropMem = chosen[len(chosen)-1]
-		if dropMem.Id != 0 {
+		if dropMem.ID != 0 {
 			db.Model(&dropMem).Update("team_id", nil)
 		}
 		chosen = chosen[:len(chosen)-1]
@@ -144,9 +155,9 @@ func groupMembers(c *gin.Context) {
 		db.Model(&chosen[k]).Update("team_id", g)
 	}
 
-	if dropMem.Id != 0 {
+	if dropMem.ID != 0 {
 		// prepend dropMem to chosen
-		c.JSON(200, append([]Member{dropMem}, chosen...))
+		c.JSON(200, append([]models.Member{dropMem}, chosen...))
 	} else {
 		c.JSON(200, chosen)
 	}
@@ -154,6 +165,66 @@ func groupMembers(c *gin.Context) {
 
 func serveFE(c *gin.Context) {
 	c.HTML(200, "index.tpl", gin.H{})
+}
+
+func listTournaments(c *gin.Context) {
+	db := initDB()
+	defer db.Close()
+
+	var tours []models.Tournament
+	db.Order("CreatedAt").Find(&tours)
+
+	c.JSON(200, tours)
+}
+
+func createTournament(c *gin.Context) {
+	db := initDB()
+	defer db.Close()
+
+	var request struct {
+		Teams []struct {
+			Member1_id int `json:"member1_id"`
+			Member2_id int `json:"member2_id"`
+		} `json:"teams"`
+	}
+
+	c.BindJSON(&request)
+	teams := request.Teams
+
+	tour := models.Tournament{}
+	db.Create(&tour)
+	if err := db.Create(&tour).Error; err == nil {
+		c.JSON(500, gin.H{"error": "Something's wrong"})
+	} else {
+		for i := 0; i < len(teams); i++ {
+			var member1 models.Member
+			var member2 models.Member
+
+			db.Find(&member1, teams[i].Member1_id)
+			db.Find(&member2, teams[i].Member2_id)
+
+			team := models.Team {
+				Tournament: tour,
+				Member1: member1,
+				Member2: member2,
+			}
+			db.Create(&team)
+			c.JSON(201, team)
+			return
+		}
+		c.JSON(201, tour)
+	}
+}
+
+func showTeam(c *gin.Context) {
+	db := initDB()
+	defer db.Close()
+
+	id := c.Params.ByName("id")
+	var team models.Team
+	db.Find(&team, id)
+
+	c.JSON(200, team)
 }
 
 func init() {
@@ -180,6 +251,11 @@ func main() {
 		v1.PATCH("/members/:id", updateMember)
 		v1.DELETE("/members/:id", destroyMember)
 		v1.PATCH("/draw", groupMembers)
+
+		v1.GET("/tournaments", listTournaments)
+		v1.POST("/tournaments", createTournament)
+
+		v1.GET("/teams/:id", showTeam)
 	}
 
 	router.Run(":" + BILAC_PORT)
