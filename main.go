@@ -189,19 +189,20 @@ func createTournament(c *gin.Context) {
 	}
 
 	c.BindJSON(&request)
-	teams := request.Teams
+	teams_raw := request.Teams
 
 	tour := models.Tournament{}
 	db.Create(&tour)
 	if err := db.Create(&tour).Error; err == nil {
 		c.JSON(500, gin.H{"error": "Something's wrong"})
 	} else {
-		for i := 0; i < len(teams); i++ {
+		// Create team
+		for i := 0; i < len(teams_raw); i++ {
 			var member1 models.Member
 			var member2 models.Member
 
-			db.Find(&member1, teams[i].Member1_id)
-			db.Find(&member2, teams[i].Member2_id)
+			db.Find(&member1, teams_raw[i].Member1_id)
+			db.Find(&member2, teams_raw[i].Member2_id)
 
 			team := models.Team {
 				Tournament: tour,
@@ -209,8 +210,23 @@ func createTournament(c *gin.Context) {
 				Member2: member2,
 			}
 			db.Create(&team)
-			c.JSON(201, team)
-			return
+		}
+
+		// Create match
+		var teams []models.Team
+		db.Model(&tour).Related(&teams)
+		for i := 0; i < len(teams)-1; i++ {
+			for j := i + 1; j < len(teams); j++ {
+				match := models.Match {
+					Tournament: tour,
+					Team1: teams[i],
+					Team2: teams[j],
+					Team1Score: 0,
+					Team2Score: 0,
+				}
+
+				db.Create(&match)
+			}
 		}
 		c.JSON(201, tour)
 	}
@@ -225,6 +241,10 @@ func showTeam(c *gin.Context) {
 	db.Find(&team, id)
 
 	c.JSON(200, team)
+}
+
+func listMatchesOfTournament(c *gin.Context) {
+
 }
 
 func init() {
