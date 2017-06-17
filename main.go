@@ -308,6 +308,9 @@ func main() {
 	router.Static("node_modules", "./node_modules")
 	router.Static("static", "./static")
 	router.GET("/", serveFE)
+	router.GET("/play", func(c *gin.Context) {
+			c.HTML(200, "play.tpl", gin.H{})
+		})
 
 	// API v1 routers
 	v1 := router.Group("/api/v1")
