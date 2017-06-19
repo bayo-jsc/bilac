@@ -16,10 +16,15 @@
 </head>
 <body>
   <div id="tf">
+    <div id="preloader">
+      <div class="loader"></div>
+    </div>
+
     <div class="container">
+      <h2>Foosball League Table</h2>
       <div class="row">
         <div class="column">
-          <h2>Foosball League Table</h2>
+          <h3>Tournament ${ tourID }</h3>
           <table>
             <thead>
               <tr>
@@ -48,7 +53,7 @@
         </div>
 
         <div class="column">
-          <h2>Matches</h2>
+          <h3>Matches</h3>
           <table>
             <tbody>
               <tr
@@ -59,6 +64,7 @@
                 <td>${ findTeamWithID(match.team2ID).name }</td>
                 <td>
                   <button
+                    class="button button-outline"
                     @click="showScoreUpdate(match)"
                   >Update</button>
                 </td>
@@ -98,9 +104,15 @@
                   v-model="score2"
                 >
               </div>
-              <button class="modal-default-button" @click="updateScore">
-                Update
-              </button>
+
+              <div>
+                <button class="modal-default-button" @click="showModal = false">
+                  Cancel
+                </button>
+                <button class="modal-default-button" @click="updateScore">
+                  Update
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -119,11 +131,6 @@
     <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
     <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
   </form>
-
-  
-  <script type="text/x-template" id="modal-template">
-  
-  </script>
 
   <script src="static/js/table.js"></script>
 </body>

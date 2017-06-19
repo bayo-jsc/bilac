@@ -15,6 +15,9 @@ new Vue({
   },
 
   mounted() {
+    let loader = document.getElementById("preloader")
+    loader.outerHTML = ""
+
     this.getTournament()
   },
 
@@ -37,7 +40,7 @@ new Vue({
           let teams = data.Teams.map(team => {
             return {
               ID: team.ID,
-              name: team.Member1.username + "+" + team.Member2.username,
+              name: team.Member1.username + " + " + team.Member2.username,
               GF: team.GF,
               GA: team.GA,
               GD: team.GD,
@@ -49,7 +52,6 @@ new Vue({
           this.$set(this, 'teams', teams)
           this.$set(this, 'matches', matches)
 
-          // this.getTeams()
         }, err => {
           console.log(err)
         })

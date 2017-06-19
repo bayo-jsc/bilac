@@ -9,12 +9,17 @@
   <title>Bilac</title>
 
   <link rel="stylesheet" href="node_modules/milligram/dist/milligram.min.css">
+  <link rel="stylesheet" href="static/css/app.css">
 
   <script src="node_modules/vue/dist/vue.js"></script>
   <script src="node_modules/axios/dist/axios.min.js"></script>
 </head>
 <body>
   <div id="tf">
+    <div id="preloader">
+      <div class="loader"></div>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="column">
