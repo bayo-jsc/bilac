@@ -23,6 +23,7 @@
             <thead>
               <tr>
                 <th>Team</th>
+                <th>Played</th>
                 <th>GF</th>
                 <th>GA</th>
                 <th>GD</th>
@@ -35,6 +36,7 @@
                 v-for="team, index in teams"
               >
                 <td>${ team.name }</td>
+                <td>${ team.PlayedMatches }</td>
                 <td>${ team.GF }</td>
                 <td>${ team.GA }</td>
                 <td>${ team.GD }</td>

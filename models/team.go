@@ -12,6 +12,7 @@ type Team struct {
 	Member1ID uint
 	Member2 Member `gorm:"ForeignKey:Member2ID"`
 	Member2ID uint
+	PlayedMatches int
 	GF int
 	GA int
 	GD int
@@ -30,7 +31,7 @@ func GetPoint(x, y int) int {
 
 func (team Team) UpdateTeamScore() {
 	db := InitDB()
-	team.GF, team.GA, team.Points = 0, 0, 0
+	team.GF, team.GA, team.Points, team.PlayedMatches = 0, 0, 0, 0
 
 	var tour Tournament
 	db.Model(team).Related(&tour)
@@ -39,16 +40,17 @@ func (team Team) UpdateTeamScore() {
 	db.Model(tour).Where("updated_at > created_at").Related(&matches)
 
 	for _, match := range matches  {
-
-			if team.ID == match.Team1ID {
-				team.GF += match.Team1Score
-				team.GA += match.Team2Score
-				team.Points += GetPoint(match.Team1Score, match.Team2Score)
-			} else if team.ID == match.Team2ID {
-				team.GF += match.Team2Score
-				team.GA += match.Team1Score
-				team.Points += GetPoint(match.Team2Score, match.Team1Score)
-			}
+		if team.ID == match.Team1ID {
+			team.GF += match.Team1Score
+			team.GA += match.Team2Score
+			team.Points += GetPoint(match.Team1Score, match.Team2Score)
+			team.PlayedMatches += 1
+		} else if team.ID == match.Team2ID {
+			team.GF += match.Team2Score
+			team.GA += match.Team1Score
+			team.Points += GetPoint(match.Team2Score, match.Team1Score)
+			team.PlayedMatches += 1
+		}
 	}
 	team.GD = team.GF - team.GA
 	db.Save(&team)

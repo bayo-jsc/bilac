@@ -42,6 +42,7 @@ new Vue({
               GA: team.GA,
               GD: team.GD,
               Points: team.Points,
+              PlayedMatches: team.PlayedMatches,
             }
           })
           this.$set(this, 'tourID', data.ID)
