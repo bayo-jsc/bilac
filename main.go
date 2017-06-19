@@ -31,20 +31,20 @@ func main() {
 		c.HTML(200, "draw.tpl", gin.H{})
 	})
 
-	// API v1 routers
-	v1 := router.Group("/api/v1")
+	// API v2 routers
+	v2 := router.Group("/api/v2")
 	{
-		v1.GET("/members", listMembers)
-		v1.POST("/members", createMember)
-		v1.GET("/members/:id", showMember)
-		v1.PATCH("/members/:id", updateMember)
-		v1.DELETE("/members/:id", destroyMember)
+		v2.GET("/members", listMembers)
+		v2.POST("/members", createMember)
+		v2.GET("/members/:id", showMember)
+		v2.PATCH("/members/:id", updateMember)
+		v2.DELETE("/members/:id", destroyMember)
 
-		v1.GET("/tournaments", listTournaments)
-		v1.POST("/tournaments", createTournament)
+		v2.GET("/tournaments", listTournaments)
+		v2.POST("/tournaments", createTournament)
 
-		v1.GET("/last-tournament", lastTournament)
-		v1.PATCH("/tournaments/:id/matches/:match_id", updateMatchScore)
+		v2.GET("/last-tournament", lastTournament)
+		v2.PATCH("/tournaments/:id/matches/:match_id", updateMatchScore)
 	}
 
 	router.Run(":" + BILAC_PORT)

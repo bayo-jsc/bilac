@@ -8,7 +8,7 @@ new Vue({
   },
 
   mounted() {
-    axios.get('api/v1/members')
+    axios.get('api/v2/members')
       .then(res => {
         this.members = res.data
       }, err => {
@@ -32,7 +32,7 @@ new Vue({
     },
 
     createTournament() {
-      return axios.post('/api/v1/tournaments', {
+      return axios.post('/api/v2/tournaments', {
         teams: this.groupTeams(),
       })
         .then((res) => {

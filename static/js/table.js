@@ -20,7 +20,7 @@ new Vue({
 
   methods: {
     getTournament() {
-      axios.get('/api/v1/last-tournament')
+      axios.get('/api/v2/last-tournament')
         .then(res => {
           const data = res.data
 
@@ -76,7 +76,7 @@ new Vue({
     },
 
     updateScore() {
-      axios.patch('/api/v1/tournaments/' + this.tourID + '/matches/' + this.matchID, {
+      axios.patch('/api/v2/tournaments/' + this.tourID + '/matches/' + this.matchID, {
         score_team_1: this.score1,
         score_team_2: this.score2,
       })
