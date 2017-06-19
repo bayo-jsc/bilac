@@ -132,10 +132,6 @@ func groupMembers(c *gin.Context) {
 	}
 }
 
-func serveFE(c *gin.Context) {
-	c.HTML(200, "index.tpl", gin.H{})
-}
-
 func listTournaments(c *gin.Context) {
 	db := models.InitDB()
 	defer db.Close()
@@ -283,10 +279,15 @@ func main() {
 	router.LoadHTMLGlob("templates/*.tpl")
 	router.Static("node_modules", "./node_modules")
 	router.Static("static", "./static")
-	router.GET("/", serveFE)
-	router.GET("/play", func(c *gin.Context) {
-			c.HTML(200, "play.tpl", gin.H{})
-		})
+
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(200, "table.tpl", gin.H{})
+	})
+
+	router.GET("/draw", func (c *gin.Context) {
+		c.HTML(200, "draw.tpl", gin.H{})
+	})
+
 
 	// API v1 routers
 	v1 := router.Group("/api/v1")

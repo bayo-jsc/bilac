@@ -40,7 +40,7 @@ new Vue({
         teams: this.groupTeams(),
       })
         .then((res) => {
-          window.location.href = '/play'
+          window.location.href = '/'
         }, (err) => {
           console.log(err)
         })
