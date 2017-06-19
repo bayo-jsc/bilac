@@ -7,14 +7,14 @@ go get -t -v ./...
 yarn
 ```
 
-+ Build:
++ Build at first time:
 
 ```
-go build -v
+go build -i
 ```
 
-+ Start server (port `8080`):
++ Update build and start server (port `8080`):
 
 ```
-./bilac
+./run.sh
 ```
