@@ -73,7 +73,7 @@
                 <td>${ teams.indexOf(findTeamWithID(match.team2ID)) + 1 }. ${ findTeamWithID(match.team2ID).name }</td>
                 <td>
                   <button
-                    class="button button-outline"
+                    class="button button-clear button-update"
                     @click="showScoreUpdate(match)"
                   >Update</button>
                 </td>
