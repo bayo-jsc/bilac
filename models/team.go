@@ -44,7 +44,7 @@ func (team Team) UpdateTeamScore() {
 	db.Model(team).Related(&tour)
 
 	var matches []Match
-	db.Model(tour).Where("updated_at > created_at").Related(&matches)
+	db.Model(tour).Where("team1_score >= ? OR team2_score >= ?", 0, 0).Related(&matches)
 
 	for _, match := range matches  {
 		if team.ID == match.Team1ID {

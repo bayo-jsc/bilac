@@ -71,8 +71,8 @@ new Vue({
       this.$set(this, 'team1Name', this.findTeamWithID(match.team1ID).name)
       this.$set(this, 'team2Name', this.findTeamWithID(match.team2ID).name)
 
-      this.$set(this, 'score1', match.team1Score)
-      this.$set(this, 'score2', match.team2Score)
+      this.$set(this, 'score1', Math.max(0, match.team1Score))
+      this.$set(this, 'score2', Math.max(0, match.team2Score))
       this.$set(this, 'matchID', match.ID)
       this.$set(this, 'showModal', true)
     },
@@ -89,5 +89,14 @@ new Vue({
           console.log(err)
         })
     },
+
+    shuffleMatch() {
+      axios.patch('/api/v2/tournaments/' + this.tourID + '/shuffle')
+        .then(res => {
+          this.getTournament()
+        }, err => {
+          console.log(err)
+        })
+    }
   },
 })
