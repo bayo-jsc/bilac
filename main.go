@@ -45,6 +45,8 @@ func main() {
 
 		v2.GET("/last-tournament", lastTournament)
 		v2.PATCH("/tournaments/:id/matches/:match_id", updateMatchScore)
+
+		v2.GET("/tournaments/:id/shuffle", shuffleMatch)
 	}
 
 	router.Run(":" + BILAC_PORT)

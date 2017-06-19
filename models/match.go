@@ -20,3 +20,11 @@ type Score struct {
 	Team1Score int `json:"score_team_1"`
 	Team2Score int `json:"score_team_2"`
 }
+
+func (match *Match) GetMatchInfo(newMatch Match) {
+	match.TournamentID = newMatch.TournamentID
+	match.Team1ID = newMatch.Team1ID
+	match.Team2ID = newMatch.Team2ID
+	match.Team1Score = newMatch.Team1Score
+	match.Team2Score = newMatch.Team2Score
+}

@@ -60,8 +60,8 @@ new Vue({
       return teams
     },
 
-    randomList(rand) {
-      return rand.sort(() => { return 0.5 - Math.random() });
+    randomList(array) {
+      return array.sort(() => { return 0.5 - Math.random() });
     },
   }
 })
