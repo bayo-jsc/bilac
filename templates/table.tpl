@@ -19,6 +19,7 @@
     <div class="container">
       <div class="row">
         <div class="column">
+          <h2>Foosball League Table</h2>
           <table>
             <thead>
               <tr>
@@ -47,6 +48,7 @@
         </div>
 
         <div class="column">
+          <h2>Matches</h2>
           <table>
             <tbody>
               <tr
@@ -65,6 +67,7 @@
           </table>
         </div>
       </div>
+      <a class="button" href="/draw">New Tournament</a>
     </div>
 
     <transition

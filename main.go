@@ -6,6 +6,7 @@ import (
 
 	"./models"
 	//"fmt"
+	"github.com/jinzhu/gorm"
 )
 
 var (
@@ -147,7 +148,9 @@ func lastTournament(c *gin.Context) {
 	defer db.Close()
 
 	var tour models.Tournament
-	db.Order("created_at desc").Preload("Matches").Preload("Teams").Preload("Teams.Member1").Preload("Teams.Member2").First(&tour)
+	db.Order("created_at desc").Preload("Matches").Preload("Teams", func(db *gorm.DB) *gorm.DB {
+		return db.Order("teams.points DESC, teams.GD DESC")
+	}).Preload("Teams.Member1").Preload("Teams.Member2").First(&tour)
 
 	c.JSON(200, tour)
 }
