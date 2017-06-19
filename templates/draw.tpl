@@ -10,7 +10,7 @@
 
   <link rel="stylesheet" href="node_modules/milligram/dist/milligram.min.css">
 
-  <script src="node_modules/vue/dist/vue.min.js"></script>
+  <script src="node_modules/vue/dist/vue.js"></script>
   <script src="node_modules/axios/dist/axios.min.js"></script>
 </head>
 <body>
@@ -54,6 +54,7 @@
             <tbody>
               <tr
                 v-for="player, index in players"
+                :key="player.id"
               >
                 <td>${ Math.trunc(index / 2) + 1 }</td>
                 <td>${ player.username }</td>
