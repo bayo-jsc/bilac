@@ -3,12 +3,8 @@ package main
 import (
 	"os"
 	"github.com/gin-gonic/gin"
-	//"github.com/jinzhu/gorm"
-
-	_ "github.com/mattn/go-sqlite3"
 
 	"./models"
-	"github.com/jinzhu/gorm"
 	//"fmt"
 )
 
@@ -16,35 +12,8 @@ var (
 	BILAC_PORT string = os.Getenv("BILAC_PORT")
 )
 
-func initDB() *gorm.DB {
-	db, err := gorm.Open("sqlite3", "db/table_football.db")
-	if err != nil {
-		panic(err)
-	}
-
-	db.LogMode(true)
-	// Create table
-	if !db.HasTable(&models.Member{}) {
-		db.CreateTable(&models.Member{})
-	}
-
-	if !db.HasTable(&models.Tournament{}) {
-		db.CreateTable(&models.Tournament{})
-	}
-
-	if !db.HasTable(&models.Match{}) {
-		db.CreateTable(&models.Match{})
-	}
-
-	if !db.HasTable(&models.Team{}) {
-		db.CreateTable(&models.Team{})
-	}
-
-	return db
-}
-
 func listMembers(c *gin.Context) {
-	db := initDB()
+	db := models.InitDB()
 	defer db.Close()
 
 	var mems []models.Member
@@ -54,7 +23,7 @@ func listMembers(c *gin.Context) {
 }
 
 func createMember(c *gin.Context) {
-	db := initDB()
+	db := models.InitDB()
 	defer db.Close()
 
 	var mem models.Member
@@ -72,7 +41,7 @@ func createMember(c *gin.Context) {
 }
 
 func showMember(c *gin.Context) {
-	db := initDB()
+	db := models.InitDB()
 	defer db.Close()
 
 	id := c.Params.ByName("id")
@@ -87,7 +56,7 @@ func showMember(c *gin.Context) {
 }
 
 func updateMember(c *gin.Context) {
-	db := initDB()
+	db := models.InitDB()
 	defer db.Close()
 
 	id := c.Params.ByName("id")
@@ -109,7 +78,7 @@ func updateMember(c *gin.Context) {
 }
 
 func destroyMember(c *gin.Context) {
-	db := initDB()
+	db := models.InitDB()
 	defer db.Close()
 
 	id := c.Params.ByName("id")
@@ -128,7 +97,7 @@ func destroyMember(c *gin.Context) {
 }
 
 func groupMembers(c *gin.Context) {
-	db := initDB()
+	db := models.InitDB()
 	defer db.Close()
 
 	var chosen []models.Member
@@ -168,7 +137,7 @@ func serveFE(c *gin.Context) {
 }
 
 func listTournaments(c *gin.Context) {
-	db := initDB()
+	db := models.InitDB()
 	defer db.Close()
 
 	var tours []models.Tournament
@@ -178,19 +147,17 @@ func listTournaments(c *gin.Context) {
 }
 
 func lastTournament(c *gin.Context) {
-	db := initDB()
+	db := models.InitDB()
 	defer db.Close()
 
 	var tour models.Tournament
-	db.Order("created_at desc").First(&tour)
-
-	db.Model(tour).Related(&tour.Matches)
+	db.Order("created_at desc").Preload("Matches").Preload("Teams").Preload("Teams.Member1").Preload("Teams.Member2").First(&tour)
 
 	c.JSON(200, tour)
 }
 
 func createTournament(c *gin.Context) {
-	db := initDB()
+	db := models.InitDB()
 	defer db.Close()
 
 	var request struct {
@@ -243,7 +210,7 @@ func createTournament(c *gin.Context) {
 }
 
 func listTeamsOfTournament(c *gin.Context) {
-	db := initDB()
+	db := models.InitDB()
 	defer db.Close()
 
 	id := c.Params.ByName("id")
@@ -251,17 +218,13 @@ func listTeamsOfTournament(c *gin.Context) {
 	db.Find(&tour, id)
 
 	var teams []models.Team
-	db.Model(&tour).Related(&teams)
+	db.Model(&tour).Preload("Member1").Preload("Member2").Related(&teams)
 
-	for i := 0; i < len(teams); i++ {
-		db.Model(teams[i]).Related(&teams[i].Member1, "Member1")
-		db.Model(teams[i]).Related(&teams[i].Member2, "Member2")
-	}
 	c.JSON(200, teams)
 }
 
 func listMatchesOfTournament(c *gin.Context) {
-	db := initDB()
+	db := models.InitDB()
 	defer db.Close()
 
 	tour_id := c.Params.ByName("id")
@@ -279,7 +242,7 @@ func listMatchesOfTournament(c *gin.Context) {
 }
 
 func updateMatchScore(c *gin.Context)  {
-	db := initDB()
+	db := models.InitDB()
 	defer db.Close()
 
 	tour_id := c.Params.ByName("id")
@@ -288,18 +251,19 @@ func updateMatchScore(c *gin.Context)  {
 
 	match_id := c.Params.ByName("match_id")
 	var match models.Match
-	db.Find(&match, match_id)
+	db.Preload("Team1").Preload("Team2").Find(&match, match_id)
 
-	var score struct{
-		ScoreTeam1 int `json:"score_team_1"`
-		ScoreTeam2 int `json:"score_team_2"`
-	}
+	var score models.Score
 	c.BindJSON(&score)
 
-	match.Team1Score = score.ScoreTeam1
-	match.Team2Score = score.ScoreTeam2
+	match.Team1Score = score.Team1Score
+	match.Team2Score = score.Team2Score
 
 	if err := db.Save(&match).Error; err == nil {
+		team1 := match.Team1
+		team2 := match.Team2
+		team1.UpdateTeamScore()
+		team2.UpdateTeamScore()
 		c.JSON(201, match)
 	} else {
 		c.JSON(500, gin.H{"error": err})
