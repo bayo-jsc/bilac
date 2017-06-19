@@ -89,5 +89,14 @@ new Vue({
           console.log(err)
         })
     },
+
+    shuffleMatch() {
+      axios.patch('/api/v2/tournaments/' + this.tourID + '/shuffle')
+        .then(res => {
+          this.getTournament()
+        }, err => {
+          console.log(err)
+        })
+    }
   },
 })

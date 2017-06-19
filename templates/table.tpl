@@ -71,6 +71,9 @@
               </tr>
             </tbody>
           </table>
+          <button
+            @click="shuffleMatch"
+          >Shuffle matches</button>
         </div>
       </div>
       <a class="button" href="/draw">New Tournament</a>
