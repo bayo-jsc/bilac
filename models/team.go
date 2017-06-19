@@ -19,6 +19,13 @@ type Team struct {
 	Points int
 }
 
+type TeamRequest struct {
+	Teams []struct {
+		Member1_id int `json:"member1_id"`
+		Member2_id int `json:"member2_id"`
+	} `json:"teams"`
+}
+
 func GetPoint(x, y int) int {
 	if x > y {
 		return 3

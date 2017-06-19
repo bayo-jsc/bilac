@@ -31,7 +31,6 @@ func main() {
 		c.HTML(200, "draw.tpl", gin.H{})
 	})
 
-
 	// API v1 routers
 	v1 := router.Group("/api/v1")
 	{

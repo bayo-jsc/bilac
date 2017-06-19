@@ -33,12 +33,7 @@ func createTournament(c *gin.Context) {
 	db := models.InitDB()
 	defer db.Close()
 
-	var request struct {
-		Teams []struct {
-			Member1_id int `json:"member1_id"`
-			Member2_id int `json:"member2_id"`
-		} `json:"teams"`
-	}
+	var request models.TeamRequest
 
 	c.BindJSON(&request)
 	teams_raw := request.Teams
