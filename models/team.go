@@ -12,4 +12,9 @@ type Team struct {
 	Member1ID uint
 	Member2 Member `gorm:"ForeignKey:Member2ID"`
 	Member2ID uint
+
+  GF uint
+  GA uint
+  GD int
+  Points uint
 }
