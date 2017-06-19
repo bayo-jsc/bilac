@@ -28,7 +28,7 @@
           <table>
             <thead>
               <tr>
-                <th>ID</th>
+                <th>Rank</th>
                 <th>Team</th>
                 <th>Played</th>
                 <th>GF</th>
@@ -59,18 +59,19 @@
           <table>
             <thead>
               <tr>
-                <td></td>
-                <td>Score</td>
-                <td></td>
+                <th></th>
+                <th>Score</th>
+                <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               <tr
                 v-for="match, index in matches"
               >
-                <td>${ teams.indexOf(findTeamWithID(match.team1ID)) + 1 }. ${ findTeamWithID(match.team1ID).name }</td>
+                <td>${ findTeamWithID(match.team1ID).name }</td>
                 <td>${ Math.max(0, match.team1Score) } - ${ Math.max(0, match.team2Score) }</td>
-                <td>${ teams.indexOf(findTeamWithID(match.team2ID)) + 1 }. ${ findTeamWithID(match.team2ID).name }</td>
+                <td>${ findTeamWithID(match.team2ID).name }</td>
                 <td>
                   <button
                     class="button button-clear button-update"
