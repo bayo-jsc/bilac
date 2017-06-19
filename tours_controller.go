@@ -23,7 +23,7 @@ func lastTournament(c *gin.Context) {
 
 	var tour models.Tournament
 	db.Order("created_at desc").Preload("Matches").Preload("Teams", func(db *gorm.DB) *gorm.DB {
-		return db.Order("teams.points DESC, teams.GD DESC")
+		return db.Order("teams.points DESC, teams.gd DESC, teams.played_matches")
 	}).Preload("Teams.Member1").Preload("Teams.Member2").First(&tour)
 
 	c.JSON(200, tour)

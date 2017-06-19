@@ -69,7 +69,7 @@
                 v-for="match, index in matches"
               >
                 <td>${ teams.indexOf(findTeamWithID(match.team1ID)) + 1 }. ${ findTeamWithID(match.team1ID).name }</td>
-                <td>${ match.team1Score } - ${ match.team2Score }</td>
+                <td>${ Math.max(0, match.team1Score) } - ${ Math.max(0, match.team2Score) }</td>
                 <td>${ teams.indexOf(findTeamWithID(match.team2ID)) + 1 }. ${ findTeamWithID(match.team2ID).name }</td>
                 <td>
                   <button

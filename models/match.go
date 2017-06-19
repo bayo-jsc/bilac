@@ -12,8 +12,8 @@ type Match struct {
 	Team1ID uint
 	Team2 Team `gorm:"ForeignKey:Team2ID"`
 	Team2ID uint
-	Team1Score int `sql:"DEFAULT:0"`
-	Team2Score int `sql:"DEFAULT:0"`
+	Team1Score int `sql:"DEFAULT:-1"`
+	Team2Score int `sql:"DEFAULT:-1"`
 }
 
 type Score struct {
