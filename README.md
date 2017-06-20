@@ -10,10 +10,16 @@ yarn
 + Build at first time:
 
 ```
-go build -i
+go build -i -v
 ```
 
-+ Update build and start server (port `8080`):
++ Setup configs (example is default value):
+
+```
+BILAC_PORT=8080
+```
+
++ Update build and start server:
 
 ```
 ./run.sh
