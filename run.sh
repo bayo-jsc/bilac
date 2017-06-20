@@ -1,2 +1,2 @@
-go build -v
+go build -v &&
 ./bilac
