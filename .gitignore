@@ -9,6 +9,7 @@ manifest.json
 
 # JS stuff
 node_modules/
+static/js/*.min.js
 
 # ENV
 .env
