@@ -1,1 +1,102 @@
-"use strict";new Vue({el:"#tf",delimiters:["${","}"],data:{tourID:0,matches:[],teams:[],team1Name:"",team2Name:"",matchID:0,score1:0,score2:0,showModal:!1},mounted:function(){document.getElementById("preloader").outerHTML="",this.getTournament()},methods:{getTournament:function(){var t=this;axios.get("/api/v2/last-tournament").then(function(e){var a=e.data,s=a.Matches.map(function(t){return{ID:t.ID,team1ID:t.Team1ID,team2ID:t.Team2ID,team1Score:t.Team1Score,team2Score:t.Team2Score}}),n=a.Teams.map(function(t){return{ID:t.ID,name:t.Member1.username+" + "+t.Member2.username,GF:t.GF,GA:t.GA,GD:t.GD,Points:t.Points,PlayedMatches:t.PlayedMatches}});t.$set(t,"tourID",a.ID),t.$set(t,"teams",n),t.$set(t,"matches",s)},function(t){console.log(t)})},matchScore:function(t,e){var a=this.matchAt(t,e);return a.team1ID?a.team1Score+"-"+a.team2Score:"--"},findTeamWithID:function(t){return this.teams.find(function(e){return e.ID==t})},showScoreUpdate:function(t){this.$set(this,"team1Name",this.findTeamWithID(t.team1ID).name),this.$set(this,"team2Name",this.findTeamWithID(t.team2ID).name),this.$set(this,"score1",Math.max(0,t.team1Score)),this.$set(this,"score2",Math.max(0,t.team2Score)),this.$set(this,"matchID",t.ID),this.$set(this,"showModal",!0)},updateScore:function(){var t=this;axios.patch("/api/v2/tournaments/"+this.tourID+"/matches/"+this.matchID,{score_team_1:this.score1,score_team_2:this.score2}).then(function(e){t.getTournament(),t.$set(t,"showModal",!1)},function(t){console.log(t)})},shuffleMatch:function(){var t=this;axios.patch("/api/v2/tournaments/"+this.tourID+"/shuffle").then(function(e){t.getTournament()},function(t){console.log(t)})}}});
+new Vue({
+  el: "#tf",
+  delimiters: ['${', '}'],
+
+  data: {
+    tourID: 0,
+    matches: [],
+    teams: [],
+    team1Name: "",
+    team2Name: "",
+    matchID: 0,
+    score1: 0,
+    score2: 0,
+    showModal: false,
+  },
+
+  mounted() {
+    let loader = document.getElementById("preloader")
+    loader.outerHTML = ""
+
+    this.getTournament()
+  },
+
+  methods: {
+    getTournament() {
+      axios.get('/api/v2/last-tournament')
+        .then(res => {
+          const data = res.data
+
+          let matches = data.Matches.map(match => {
+            return {
+              ID: match.ID,
+              team1ID: match.Team1ID,
+              team2ID: match.Team2ID,
+              team1Score: match.Team1Score,
+              team2Score: match.Team2Score,
+            }
+          })
+
+          let teams = data.Teams.map(team => {
+            return {
+              ID: team.ID,
+              name: team.Member1.username + " + " + team.Member2.username,
+              GF: team.GF,
+              GA: team.GA,
+              GD: team.GD,
+              Points: team.Points,
+              PlayedMatches: team.PlayedMatches,
+            }
+          })
+          this.$set(this, 'tourID', data.ID)
+          this.$set(this, 'teams', teams)
+          this.$set(this, 'matches', matches)
+
+        }, err => {
+          console.log(err)
+        })
+    },
+
+    matchScore(team1, team2) {
+      let game = this.matchAt(team1, team2)
+
+      return game.team1ID ? game.team1Score + "-" + game.team2Score : "--"
+    },
+
+    findTeamWithID(teamID) {
+      return this.teams.find(x => x.ID == teamID)
+    },
+
+    showScoreUpdate(match) {
+      this.$set(this, 'team1Name', this.findTeamWithID(match.team1ID).name)
+      this.$set(this, 'team2Name', this.findTeamWithID(match.team2ID).name)
+
+      this.$set(this, 'score1', Math.max(0, match.team1Score))
+      this.$set(this, 'score2', Math.max(0, match.team2Score))
+      this.$set(this, 'matchID', match.ID)
+      this.$set(this, 'showModal', true)
+    },
+
+    updateScore() {
+      axios.patch('/api/v2/tournaments/' + this.tourID + '/matches/' + this.matchID, {
+        score_team_1: this.score1,
+        score_team_2: this.score2,
+      })
+        .then(res => {
+          this.getTournament()
+          this.$set(this, 'showModal', false)
+        }, err => {
+          console.log(err)
+        })
+    },
+
+    shuffleMatch() {
+      axios.patch('/api/v2/tournaments/' + this.tourID + '/shuffle')
+        .then(res => {
+          this.getTournament()
+        }, err => {
+          console.log(err)
+        })
+    }
+  },
+})
