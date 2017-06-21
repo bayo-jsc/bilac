@@ -112,9 +112,10 @@
               </div>
 
               <div>
-                <label for="team2">${ team2Name }</label>
+                <label for="team1">${ team2Name }</label>
                 <input type="number" name="score_team_2"
                   v-model="score2"
+                  @keydown.enter="updateScore"
                 >
               </div>
 
@@ -145,6 +146,6 @@
     <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
   </form>
 
-  <script src="static/js/table.js"></script>
+  <script src="static/js/table.min.js"></script>
 </body>
 </html>
