@@ -112,9 +112,10 @@
               </div>
 
               <div>
-                <label for="team2">${ team2Name }</label>
+                <label for="team1">${ team2Name }</label>
                 <input type="number" name="score_team_2"
                   v-model="score2"
+                  @keydown.enter="updateScore"
                 >
               </div>
 
