@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/jinzhu/gorm"
 	"math"
+	//"fmt"
 )
 
 type Match struct {
@@ -47,12 +48,13 @@ func (match Match) UpdateElo() {
 	var s1, s2 float64
 	if match.Team1Score >= match.Team2Score {
 		s1 = float64(match.Team1Score) / float64(match.Team1Score + match.Team2Score)
-		s2 = 1 - float64(match.Team1Score) / float64(match.Team1Score + match.Team2Score)
+		s2 = 1 - s1
 	} else {
 		s1 = 1 - float64(match.Team2Score) / float64(match.Team1Score + match.Team2Score)
-		s2 = float64(match.Team2Score) / float64(match.Team1Score + match.Team2Score)
+		s2 = 1 - s1
 	}
 
+	//fmt.Printf("%.3f : %.3f : %.3f : %.3f\n", exp1, s1, exp2, s2)
 	team1.UpdateElo(100 * (s1 - exp1))
 	team2.UpdateElo(100 * (s2 - exp2))
 }

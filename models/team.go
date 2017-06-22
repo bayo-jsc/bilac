@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
+	//"fmt"
 	"math"
 )
 
@@ -78,7 +79,8 @@ func (team Team) UpdateElo(elo float64) {
 	defer db.Close()
 
 	db.Preload("Member1").Preload("Member2").Find(&team, team.ID)
-	smallRatio := math.Min(float64(team.Member1.Elo), float64(team.Member2.Elo))
+	smallRatio := math.Min(float64(team.Member1.Elo), float64(team.Member2.Elo)) /
+						float64(team.Member1.Elo + team.Member2.Elo)
 
 	var team1Ratio float64
 	if elo >= 0 {
@@ -95,6 +97,8 @@ func (team Team) UpdateElo(elo float64) {
 		}
 	}
 
-	team.Member1.AddElo(int(elo * team1Ratio))
-	team.Member2.AddElo(int(elo * (1 - team1Ratio)))
+	//team1Ratio := 0.5
+	//fmt.Printf("%.2f %.2f\n", elo, team1Ratio)
+	team.Member1.AddElo(int(2 * elo * team1Ratio))
+	team.Member2.AddElo(int(2 * elo * (1 - team1Ratio)))
 }

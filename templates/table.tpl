@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="node_modules/milligram/dist/milligram.min.css">
   <link rel="stylesheet" href="static/css/app.css">
 
-  <script src="node_modules/vue/dist/vue.min.js"></script>
+  <script src="node_modules/vue/dist/vue.js"></script>
   <script src="node_modules/axios/dist/axios.min.js"></script>
 </head>
 <body>
@@ -22,6 +22,16 @@
 
     <div class="container">
       <h2>Foosball League Table</h2>
+      <select
+        v-model="tourID"
+      >
+        <option
+            v-for="id in tourIDs"
+            :value="id"
+        >
+            ${ id }
+        </option>
+      </select>
       <div class="row">
         <div class="column">
           <h3>Tournament ${ tourID }</h3>
@@ -76,6 +86,7 @@
                   <button
                     class="button button-clear button-update"
                     @click="showScoreUpdate(match)"
+                    v-if="tourID === lastTourID"
                   >Update</button>
                 </td>
               </tr>
@@ -83,6 +94,7 @@
           </table>
           <button
             @click="shuffleMatch"
+            v-if="tourID === lastTourID"
           >Shuffle matches</button>
         </div>
       </div>
