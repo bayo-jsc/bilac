@@ -112,6 +112,7 @@ func updateMatchScore(c *gin.Context)  {
 		team2 := match.Team2
 		team1.UpdateTeamScore()
 		team2.UpdateTeamScore()
+		match.UpdateElo()
 		c.JSON(201, match)
 	} else {
 		c.JSON(500, gin.H{"error": err})
