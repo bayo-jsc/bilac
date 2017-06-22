@@ -3,7 +3,9 @@ new Vue({
   delimiters: ['${', '}'],
 
   data: {
+    tourIDs: [],
     tourID: 0,
+    lastTourID: 0,
     matches: [],
     teams: [],
     team1Name: "",
@@ -18,12 +20,32 @@ new Vue({
     let loader = document.getElementById("preloader")
     loader.outerHTML = ""
 
-    this.getTournament()
+    this.getTourIDs()
+  },
+
+  watch: {
+    tourID() {
+      this.getTournament()
+    },
   },
 
   methods: {
+    getTourIDs() {
+      axios.get('/api/v2/tournaments')
+        .then(res => {
+          let ids = res.data.map(tour => tour.ID)
+
+          this.$set(this, 'tourIDs', ids)
+          this.$set(this, 'tourID', ids[0])
+          this.$set(this, 'lastTourID', ids[0])
+          this.getTournament()
+        }, err => {
+          console.log(err)
+        })
+    },
+
     getTournament() {
-      axios.get('/api/v2/last-tournament')
+      axios.get(`/api/v2/tournaments/${this.tourID}`)
         .then(res => {
           const data = res.data
 
@@ -48,7 +70,7 @@ new Vue({
               PlayedMatches: team.PlayedMatches,
             }
           })
-          this.$set(this, 'tourID', data.ID)
+
           this.$set(this, 'teams', teams)
           this.$set(this, 'matches', matches)
 
