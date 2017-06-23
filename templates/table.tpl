@@ -15,6 +15,18 @@
   <script src="node_modules/axios/dist/axios.min.js"></script>
 </head>
 <body>
+  <div class="row">
+    <div class="column">
+      Go to:
+    </div>
+    <button class="column button button-outline">
+      <a href="/draw" target="_blank">Draw</a>
+    </button>
+
+    <button class="column button button-outline">
+      <a href="/elo" target="_blank">Elo</a>
+    </button>
+  </div>
   <div id="tf">
     <div id="preloader">
       <div class="loader"></div>
