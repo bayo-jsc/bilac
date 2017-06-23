@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"bilac/models"
+	"../models"
 )
 
 func main() {
