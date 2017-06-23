@@ -1,0 +1,14 @@
+{
+  "execMap": {
+    "go": "go",
+    "sh": "bash"
+  },
+  "ignore": [
+    "^bilac$",
+    "*.min.*"
+  ],
+  "ext": "go js css tpl",
+  "events": {
+    "restart": "pkill bilac"
+  }
+}
