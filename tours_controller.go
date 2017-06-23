@@ -12,19 +12,21 @@ func listTournaments(c *gin.Context) {
 	defer db.Close()
 
 	var tours []models.Tournament
-	db.Order("CreatedAt").Find(&tours)
+	db.Order("created_at DESC").Find(&tours)
 
 	c.JSON(200, tours)
 }
 
-func lastTournament(c *gin.Context) {
+func getTournament(c *gin.Context) {
 	db := models.InitDB()
 	defer db.Close()
 
+	id := c.Params.ByName("id")
 	var tour models.Tournament
-	db.Order("created_at desc").Preload("Matches").Preload("Teams", func(db *gorm.DB) *gorm.DB {
+
+	db.Preload("Matches").Preload("Teams", func(db *gorm.DB) *gorm.DB {
 		return db.Order("teams.points DESC, teams.gd DESC, teams.played_matches")
-	}).Preload("Teams.Member1").Preload("Teams.Member2").First(&tour)
+	}).Preload("Teams.Member1").Preload("Teams.Member2").Find(&tour, id)
 
 	c.JSON(200, tour)
 }
@@ -110,6 +112,7 @@ func updateMatchScore(c *gin.Context)  {
 		team2 := match.Team2
 		team1.UpdateTeamScore()
 		team2.UpdateTeamScore()
+		match.UpdateElo()
 		c.JSON(201, match)
 	} else {
 		c.JSON(500, gin.H{"error": err})

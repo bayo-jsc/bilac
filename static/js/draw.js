@@ -16,7 +16,11 @@ new Vue({
 
   methods: {
     getMembers() {
-      axios.get('api/v2/members')
+      axios.get('api/v2/members', {
+        params: {
+          sort: "ID",
+        }
+      })
         .then(res => {
           this.members = res.data
         }, err => {

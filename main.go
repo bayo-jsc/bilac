@@ -31,6 +31,10 @@ func main() {
 		c.HTML(200, "draw.tpl", gin.H{})
 	})
 
+	router.GET("/elo", func (c *gin.Context) {
+		c.HTML(200, "elo.tpl", gin.H{})
+	})
+
 	// API v2 routers
 	v2 := router.Group("/api/v2")
 	{
@@ -43,10 +47,12 @@ func main() {
 		v2.GET("/tournaments", listTournaments)
 		v2.POST("/tournaments", createTournament)
 
-		v2.GET("/last-tournament", lastTournament)
+		v2.GET("/tournaments/:id", getTournament)
 		v2.PATCH("/tournaments/:id/matches/:match_id", updateMatchScore)
 
 		v2.PATCH("/tournaments/:id/shuffle", shuffleMatch)
+
+		//v2.GET("/members/:id/matches", getMemberMatches)
 	}
 
 	router.Run(":" + BILAC_PORT)

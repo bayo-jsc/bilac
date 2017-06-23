@@ -2,6 +2,8 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
+	//"fmt"
+	"math"
 )
 
 type Team struct {
@@ -26,7 +28,7 @@ type TeamRequest struct {
 	} `json:"teams"`
 }
 
-func GetPoint(x, y int) int {
+func getPoint(x, y int) int {
 	if x > y {
 		return 3
 	}
@@ -50,15 +52,53 @@ func (team Team) UpdateTeamScore() {
 		if team.ID == match.Team1ID {
 			team.GF += match.Team1Score
 			team.GA += match.Team2Score
-			team.Points += GetPoint(match.Team1Score, match.Team2Score)
+			team.Points += getPoint(match.Team1Score, match.Team2Score)
 			team.PlayedMatches += 1
 		} else if team.ID == match.Team2ID {
 			team.GF += match.Team2Score
 			team.GA += match.Team1Score
-			team.Points += GetPoint(match.Team2Score, match.Team1Score)
+			team.Points += getPoint(match.Team2Score, match.Team1Score)
 			team.PlayedMatches += 1
 		}
 	}
 	team.GD = team.GF - team.GA
 	db.Save(&team)
+}
+
+func (team Team) AvgElo() float64 {
+	db := InitDB()
+	defer db.Close()
+
+	db.Preload("Member1").Preload("Member2").Find(&team, team.ID)
+
+	return float64(team.Member1.Elo + team.Member2.Elo) / 2
+}
+
+func (team Team) UpdateElo(elo float64) {
+	db := InitDB()
+	defer db.Close()
+
+	db.Preload("Member1").Preload("Member2").Find(&team, team.ID)
+	smallRatio := math.Min(float64(team.Member1.Elo), float64(team.Member2.Elo)) /
+						float64(team.Member1.Elo + team.Member2.Elo)
+
+	var team1Ratio float64
+	if elo >= 0 {
+		if team.Member1.Elo >= team.Member2.Elo {
+			team1Ratio = smallRatio
+		} else {
+			team1Ratio = 1 - smallRatio
+		}
+	} else {
+		if team.Member1.Elo >= team.Member2.Elo {
+			team1Ratio = 1 - smallRatio
+		} else {
+			team1Ratio = smallRatio
+		}
+	}
+
+	//team1Ratio := 0.5
+	//fmt.Printf("%.2f %.2f\n", elo, team1Ratio)
+	team.Member1.AddElo(int(2 * elo * team1Ratio))
+	team.Member2.AddElo(int(2 * elo * (1 - team1Ratio)))
 }

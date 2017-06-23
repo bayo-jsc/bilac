@@ -19,4 +19,12 @@ gulp.task('default', () => {
     .pipe(uglify())
     .pipe(concat('draw.min.js'))
     .pipe(gulp.dest('static/js'))
+
+  gulp.src('static/js/elo.js')
+    .pipe(babel({
+      presets: ['env']
+    }))
+    .pipe(uglify())
+    .pipe(concat('elo.min.js'))
+    .pipe(gulp.dest('static/js'))
 })
