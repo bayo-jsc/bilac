@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 
-	"bilac/models"
+	"./models"
 )
 
 func listTournaments(c *gin.Context) {

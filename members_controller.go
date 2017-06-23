@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 
-	"bilac/models"
+	"./models"
 )
 
 func listMembers(c *gin.Context) {
