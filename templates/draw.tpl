@@ -19,13 +19,17 @@
     <div class="column">
       Go to:
     </div>
-    <button class="column button button-outline">
-      <a href="/" target="_blank">Table</a>
-    </button>
+    <a href="/">
+      <button class="column button button-outline">
+        Table
+      </button>
+    </a>
 
-    <button class="column button button-outline">
-      <a href="/elo" target="_blank">Elo</a>
-    </button>
+    <a href="/elo">
+      <button class="column button button-outline">
+        Elo
+      </button>
+    </a>
   </div>
 
   <div id="tf">
