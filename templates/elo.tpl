@@ -20,13 +20,13 @@
     <div class="column">
       Go to:
     </div>
-    <a href="/">
+    <a href="/" class="column">
       <button class="column button button-outline">
         Table
       </button>
     </a>
 
-    <a href="/draw">
+    <a href="/draw" class="column">
       <button class="column button button-outline">
         Draw
       </button>
