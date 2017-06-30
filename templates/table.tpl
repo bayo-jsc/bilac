@@ -19,13 +19,17 @@
     <div class="column">
       Go to:
     </div>
-    <button class="column button button-outline">
-      <a href="/draw" target="_blank">Draw</a>
-    </button>
+    <a href="/draw" class="column">
+      <button class="button button-outline">
+        Draw
+      </button>
+    </a>
 
-    <button class="column button button-outline">
-      <a href="/elo" target="_blank">Elo</a>
-    </button>
+    <a href="/elo" class="column">
+      <button class="button button-outline">
+        Elo
+      </button>
+    </a>
   </div>
   <div id="tf">
     <div id="preloader">
