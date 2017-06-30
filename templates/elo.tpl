@@ -21,13 +21,13 @@
       Go to:
     </div>
     <a href="/" class="column">
-      <button class="column button button-outline">
+      <button class="button button-outline">
         Table
       </button>
     </a>
 
     <a href="/draw" class="column">
-      <button class="column button button-outline">
+      <button class="button button-outline">
         Draw
       </button>
     </a>

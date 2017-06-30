@@ -26,7 +26,7 @@
     </a>
 
     <a href="/elo" class="column">
-      <button class="column button button-outline">
+      <button class="button button-outline">
         Elo
       </button>
     </a>
