@@ -65,11 +65,20 @@ func (team Team) UpdateTeamScore() {
 	db.Save(&team)
 }
 
-func (team Team) AvgElo() float64 {
+func (team *Team) LoadMembers() {
 	db := InitDB()
 	defer db.Close()
 
 	db.Preload("Member1").Preload("Member2").Find(&team, team.ID)
+}
+
+func (team Team) AvgElo() float64 {
+	db := InitDB()
+	defer db.Close()
+
+	if &team.Member1 == nil || &team.Member2 == nil {
+		db.Preload("Member1").Preload("Member2").Find(&team, team.ID)
+	}
 
 	return float64(team.Member1.Elo + team.Member2.Elo) / 2
 }
