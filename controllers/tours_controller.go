@@ -1,13 +1,13 @@
-package main
+package controllers
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 
-	"./models"
+	"../models"
 )
 
-func listTournaments(c *gin.Context) {
+func ListTournaments(c *gin.Context) {
 	db := models.InitDB()
 	defer db.Close()
 
@@ -17,7 +17,7 @@ func listTournaments(c *gin.Context) {
 	c.JSON(200, tours)
 }
 
-func getTournament(c *gin.Context) {
+func GetTournament(c *gin.Context) {
 	db := models.InitDB()
 	defer db.Close()
 
@@ -26,12 +26,12 @@ func getTournament(c *gin.Context) {
 
 	db.Preload("Matches").Preload("Teams", func(db *gorm.DB) *gorm.DB {
 		return db.Order("teams.points DESC, teams.gd DESC, teams.played_matches")
-	}).Preload("Teams.Member1").Preload("Teams.Member2").Find(&tour, id)
+	}).Find(&tour, id)
 
 	c.JSON(200, tour)
 }
 
-func createTournament(c *gin.Context) {
+func CreateTournament(c *gin.Context) {
 	db := models.InitDB()
 	defer db.Close()
 
@@ -76,7 +76,7 @@ func createTournament(c *gin.Context) {
 	}
 }
 
-func shuffleMatch(c *gin.Context) {
+func ShuffleMatch(c *gin.Context) {
 	db := models.InitDB()
 	defer db.Close()
 
@@ -89,7 +89,7 @@ func shuffleMatch(c *gin.Context) {
 	c.JSON(200, tour)
 }
 
-func updateMatchScore(c *gin.Context)  {
+func UpdateMatchScore(c *gin.Context)  {
 	db := models.InitDB()
 	defer db.Close()
 

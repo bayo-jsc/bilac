@@ -1,12 +1,12 @@
-package main
+package controllers
 
 import (
 	"github.com/gin-gonic/gin"
 
-	"./models"
+	"../models"
 )
 
-func listMembers(c *gin.Context) {
+func ListMembers(c *gin.Context) {
 	db := models.InitDB()
 	defer db.Close()
 
@@ -18,7 +18,7 @@ func listMembers(c *gin.Context) {
 	c.JSON(200, mems)
 }
 
-func createMember(c *gin.Context) {
+func CreateMember(c *gin.Context) {
 	db := models.InitDB()
 	defer db.Close()
 
@@ -36,7 +36,7 @@ func createMember(c *gin.Context) {
 	}
 }
 
-func showMember(c *gin.Context) {
+func ShowMember(c *gin.Context) {
 	db := models.InitDB()
 	defer db.Close()
 
@@ -51,7 +51,7 @@ func showMember(c *gin.Context) {
 	}
 }
 
-func updateMember(c *gin.Context) {
+func UpdateMember(c *gin.Context) {
 	db := models.InitDB()
 	defer db.Close()
 
@@ -73,7 +73,7 @@ func updateMember(c *gin.Context) {
 	}
 }
 
-func destroyMember(c *gin.Context) {
+func DestroyMember(c *gin.Context) {
 	db := models.InitDB()
 	defer db.Close()
 

@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"github.com/gin-gonic/gin"
+	"./controllers"
 )
 
 var (
@@ -38,19 +39,19 @@ func main() {
 	// API v2 routers
 	v2 := router.Group("/api/v2")
 	{
-		v2.GET("/members", listMembers)
-		v2.POST("/members", createMember)
-		v2.GET("/members/:id", showMember)
-		v2.PATCH("/members/:id", updateMember)
-		v2.DELETE("/members/:id", destroyMember)
+		v2.GET("/members", controllers.ListMembers)
+		v2.POST("/members", controllers.CreateMember)
+		v2.GET("/members/:id", controllers.ShowMember)
+		v2.PATCH("/members/:id", controllers.UpdateMember)
+		v2.DELETE("/members/:id", controllers.DestroyMember)
 
-		v2.GET("/tournaments", listTournaments)
-		v2.POST("/tournaments", createTournament)
+		v2.GET("/tournaments", controllers.ListTournaments)
+		v2.POST("/tournaments", controllers.CreateTournament)
 
-		v2.GET("/tournaments/:id", getTournament)
-		v2.PATCH("/tournaments/:id/matches/:match_id", updateMatchScore)
+		v2.GET("/tournaments/:id", controllers.GetTournament)
+		v2.PATCH("/tournaments/:id/matches/:match_id", controllers.UpdateMatchScore)
 
-		v2.PATCH("/tournaments/:id/shuffle", shuffleMatch)
+		v2.PATCH("/tournaments/:id/shuffle", controllers.ShuffleMatch)
 
 		//v2.GET("/members/:id/matches", getMemberMatches)
 	}
