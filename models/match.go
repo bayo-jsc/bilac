@@ -32,6 +32,10 @@ func (match *Match) GetMatchInfo(newMatch Match) {
 }
 
 func (match Match) UpdateElo() {
+	if match.Team1Score < 0 || match.Team2Score < 0 {
+		return
+	}
+
 	db := InitDB()
 	defer db.Close()
 
