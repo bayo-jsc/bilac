@@ -26,7 +26,7 @@ func GetTournament(c *gin.Context) {
 
 	db.Preload("Matches").Preload("Teams", func(db *gorm.DB) *gorm.DB {
 		return db.Order("teams.points DESC, teams.gd DESC, teams.played_matches")
-	}).Find(&tour, id)
+	}).Preload("Teams.Member1").Preload("Teams.Member2").Find(&tour, id)
 
 	c.JSON(200, tour)
 }

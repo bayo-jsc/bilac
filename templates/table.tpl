@@ -69,7 +69,7 @@
                 v-for="team, index in teams"
               >
                 <td>${ index + 1 }</td>
-                <td>${ team.name }</td>
+                <td>${ teamName(team) }</td>
                 <td>${ team.PlayedMatches }</td>
                 <td>${ team.GF }</td>
                 <td>${ team.GA }</td>
@@ -95,9 +95,11 @@
               <tr
                 v-for="match, index in matches"
               >
-                <td>${ findTeamWithID(match.team1ID).name }</td>
-                <td>${ Math.max(0, match.team1Score) } - ${ Math.max(0, match.team2Score) }</td>
-                <td>${ findTeamWithID(match.team2ID).name }</td>
+                <td>
+                  ${ team1NameWithElo(match) }
+                </td>
+                <td>${ Math.max(0, match.Team1Score) } - ${ Math.max(0, match.Team2Score) }</td>
+                <td>${ team2NameWithElo(match) }</td>
                 <td>
                   <button
                     class="button button-clear button-update"
