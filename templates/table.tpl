@@ -8,30 +8,30 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Bilac</title>
 
-  <link rel="stylesheet" href="node_modules/milligram/dist/milligram.min.css">
+  <link rel="stylesheet" href="node_modules/semantic-ui-css/semantic.min.css">
   <link rel="stylesheet" href="static/css/app.css">
 
   <script src="node_modules/vue/dist/vue.js"></script>
   <script src="node_modules/axios/dist/axios.min.js"></script>
 </head>
 <body>
-  <div class="row">
-    <div class="column">
-      Go to:
-    </div>
-    <a href="/draw" class="column">
-      <button class="column button button-outline">
-        Draw
-      </button>
-    </a>
+  <div class="ui container" id="tf">
+    <div class="row">
+      <div class="column">
+        Go to:
+      </div>
+      <a href="/draw" class="column">
+        <button class="column button button-outline">
+          Draw
+        </button>
+      </a>
 
-    <a href="/elo" class="column">
-      <button class="column button button-outline">
-        Elo
-      </button>
-    </a>
-  </div>
-  <div id="tf">
+      <a href="/elo" class="column">
+        <button class="column button button-outline">
+          Elo
+        </button>
+      </a>
+    </div>
     <div id="preloader">
       <div class="loader"></div>
     </div>
@@ -48,10 +48,10 @@
             ${ id }
         </option>
       </select>
-      <div class="row">
+      <div class="ui two column grid">
         <div class="column">
           <h3>Tournament ${ tourID }</h3>
-          <table>
+          <table class="ui celled table">
             <thead>
               <tr>
                 <th>Rank</th>
@@ -82,7 +82,7 @@
 
         <div class="column">
           <h3>Matches</h3>
-          <table>
+          <table class="ui celled table">
             <thead>
               <tr>
                 <th></th>
