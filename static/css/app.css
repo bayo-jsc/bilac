@@ -121,3 +121,7 @@
 body {
   color: #000000
 }
+
+select {
+  display: block;
+}

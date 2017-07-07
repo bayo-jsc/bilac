@@ -7,7 +7,7 @@
     "^bilac$",
     "*.min.*"
   ],
-  "ext": "go js css tpl",
+  "ext": "go js css",
   "events": {
     "restart": "pkill bilac"
   }
