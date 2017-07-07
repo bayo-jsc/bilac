@@ -1,5 +1,7 @@
 ## Development
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/bayo-jsc/bilac.svg)](https://greenkeeper.io/)
+
 + Install dependencies:
 
 ```
