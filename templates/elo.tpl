@@ -48,6 +48,7 @@
                 <th>Rank</th>
                 <th>Member</th>
                 <th>Elo</th>
+                <th>Bit</th>
               </tr>
             </thead>
 
@@ -58,6 +59,7 @@
                 <td>${ index + 1 }</td>
                 <td>${ member.username }</td>
                 <td>${ member.elo }</td>
+                <td>${ `member.elo > 1024 ? '11' : '10'` bits }</td>
               </tr>
             </tbody>
           </table>
