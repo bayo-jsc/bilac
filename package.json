@@ -10,7 +10,7 @@
     "dev": "nodemon --config nodemon.json run.sh"
   },
   "dependencies": {
-    "axios": "^0.15.3",
+    "axios": "^0.16.2",
     "babel-preset-env": "^1.5.2",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
