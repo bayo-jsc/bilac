@@ -59,7 +59,7 @@
                 <td>${ index + 1 }</td>
                 <td>${ member.username }</td>
                 <td>${ member.elo }</td>
-                <td>${ `member.elo > 1024 ? '11' : '10'` bits }</td>
+                <td>${ `member.elo > 1023 ? '11' : '10'` bits }</td>
               </tr>
             </tbody>
           </table>
