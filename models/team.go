@@ -98,6 +98,6 @@ func (team Team) UpdateElo(db *gorm.DB, elo float64) {
 
 	//team1Ratio := 0.5
 	//fmt.Printf("%.2f %.2f\n", elo, team1Ratio)
-	team.Member1.AddElo(int(2 * elo * team1Ratio))
-	team.Member2.AddElo(int(2 * elo * (1 - team1Ratio)))
+	team.Member1.AddElo(db, int(2 * elo * team1Ratio))
+	team.Member2.AddElo(db, int(2 * elo * (1 - team1Ratio)))
 }

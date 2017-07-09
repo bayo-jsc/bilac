@@ -10,10 +10,7 @@ type Member struct {
 	Elo int `json:"elo" sql:"DEFAULT:1000"`
 }
 
-func (member Member) AddElo(amount int) {
-	db := InitDB()
-	defer db.Close()
-
+func (member Member) AddElo(db *gorm.DB, amount int) {
 	member.Elo += amount
 	db.Save(&member)
 }
