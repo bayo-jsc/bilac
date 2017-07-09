@@ -89,6 +89,8 @@
           </table>
         </div>
       </div>
+
+      <br>
       {{ template "donate" }}
     </div>
   </div>
