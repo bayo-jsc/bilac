@@ -90,24 +90,40 @@ new Vue({
         })
     },
 
+    matchFinished(match) {
+      return (match.Team1Score == -1 || match.Team2Score == -1) ? false : true
+    },
+
     teamName(team) {
       return `${ team.Member1.username } + ${ team.Member2.username }`
+    },
+
+    memberWithElo(mem, eloChange, finished) {
+      return `${ mem.username }` + (finished ? `(${ eloChange })` : '')
     },
 
     team1NameWithElo(match) {
       const team = this.findTeamWithID(match.Team1ID)
       const mem1Change = match.Mem1EloAfter - match.Mem1EloBefore
       const mem2Change = match.Mem2EloAfter - match.Mem2EloBefore
-      return `${ team.Member1.username }(${mem1Change}) 
-             ${ team.Member2.username }(${mem2Change})`
+      const finished = this.matchFinished(match)
+
+      return `${ this.memberWithElo(team.Member1, mem1Change, finished) } 
+              ${ this.memberWithElo(team.Member2, mem2Change, finished) }`
     },
 
     team2NameWithElo(match) {
       const team = this.findTeamWithID(match.Team2ID)
       const mem3Change = match.Mem3EloAfter - match.Mem3EloBefore
       const mem4Change = match.Mem4EloAfter - match.Mem4EloBefore
-      return `${ team.Member1.username }(${mem3Change}) 
-             ${ team.Member2.username }(${mem4Change})`
+      const finished = this.matchFinished(match)
+
+      return `${ this.memberWithElo(team.Member1, mem3Change, finished) } 
+              ${ this.memberWithElo(team.Member2, mem4Change, finished) }`
+    },
+
+    evalScore(score) {
+      return score === -1 ? 'TBD' : score
     },
   },
 })

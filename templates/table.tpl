@@ -101,7 +101,7 @@
                 <td>
                   ${ team1NameWithElo(match) }
                 </td>
-                <td>${ Math.max(0, match.Team1Score) } - ${ Math.max(0, match.Team2Score) }</td>
+                <td>${ evalScore(match.Team1Score) } - ${ evalScore(match.Team2Score) }</td>
                 <td>${ team2NameWithElo(match) }</td>
                 <td>
                   <button
