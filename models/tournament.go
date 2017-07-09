@@ -2,8 +2,6 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
-
-	//"fmt"
 )
 
 type Tournament struct {
@@ -77,4 +75,21 @@ func (tour *Tournament) CreateMatches(db *gorm.DB, teams []Team) []Match {
 	}
 
 	return matches
+}
+
+func (tour Tournament) Delete(db *gorm.DB) {
+	var matches []Match
+	var teams []Team
+	db.Model(tour).Related(&matches)
+	db.Model(tour).Related(&teams)
+
+	for _, match := range matches {
+		db.Delete(&match)
+	}
+
+	for _, team := range teams {
+		db.Delete(&team)
+	}
+
+	db.Delete(&tour)
 }
