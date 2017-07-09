@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,7 +44,7 @@
       </div>
 
       <div class="row">
-        <div class="col m6">
+        <div class="col m5">
           <h5>Tournament ${ tourID }</h5>
           <table class="bordered">
             <thead>
@@ -75,7 +75,7 @@
           </table>
         </div>
 
-        <div class="col m6">
+        <div class="col m7">
           <h5>Matches</h5>
           <table class="striped">
             <thead>
