@@ -46,10 +46,10 @@ func CreateTournament(c *gin.Context) {
 	} else {
 		// Create teams
 		var teams []models.Team
-		teams = tour.CreateTeams(request)
+		teams = tour.CreateTeams(db, request)
 
 		// Create matches
-		tour.CreateMatches(teams)
+		tour.CreateMatches(db, teams)
 
 		c.JSON(201, tour)
 	}
@@ -76,9 +76,9 @@ func UpdateMatchScore(c *gin.Context)  {
 	if err := db.Save(&match).Error; err == nil {
 		team1 := match.Team1
 		team2 := match.Team2
-		team1.UpdateTeamScore()
-		team2.UpdateTeamScore()
-		match.UpdateElo()
+		team1.UpdateTeamScore(db)
+		team2.UpdateTeamScore(db)
+		match.UpdateElo(db)
 		c.JSON(201, match)
 	} else {
 		c.JSON(500, gin.H{"error": err})

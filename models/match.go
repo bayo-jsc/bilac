@@ -40,21 +40,18 @@ func (match *Match) GetMatchInfo(newMatch Match) {
 	match.Team2Score = newMatch.Team2Score
 }
 
-func (match Match) UpdateElo() {
+func (match Match) UpdateElo(db *gorm.DB) {
 	if match.Team1Score < 0 || match.Team2Score < 0 {
 		return
 	}
-
-	db := InitDB()
-	defer db.Close()
 
 	var team1, team2 Team
 	db.Model(match).Related(&team1, "Team1ID")
 	db.Model(match).Related(&team2, "Team2ID")
 
 	// Preload members
-	team1.LoadMembers()
-	team2.LoadMembers()
+	team1.LoadMembers(db)
+	team2.LoadMembers(db)
 
 	// Assign before elo for members
 	match.Mem1EloBefore = team1.Member1.Elo
@@ -63,8 +60,8 @@ func (match Match) UpdateElo() {
 	match.Mem4EloBefore = team2.Member2.Elo
 
 	// Average elo of each teams
-	elo1 := team1.AvgElo()
-	elo2 := team2.AvgElo()
+	elo1 := team1.AvgElo(db)
+	elo2 := team2.AvgElo(db)
 
 	// Expectation scores
 	exp1 := 1 / float64(1 + math.Pow(10, (elo2 - elo1) / 500))
@@ -81,12 +78,12 @@ func (match Match) UpdateElo() {
 	}
 
 	// Update team elo
-	team1.UpdateElo(100 * (s1 - exp1))
-	team2.UpdateElo(100 * (s2 - exp2))
+	team1.UpdateElo(db, 100 * (s1 - exp1))
+	team2.UpdateElo(db, 100 * (s2 - exp2))
 
 	// Assign after elo
-	team1.LoadMembers()
-	team2.LoadMembers()
+	team1.LoadMembers(db)
+	team2.LoadMembers(db)
 	match.Mem1EloAfter = team1.Member1.Elo
 	match.Mem2EloAfter = team1.Member2.Elo
 	match.Mem3EloAfter = team2.Member1.Elo

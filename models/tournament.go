@@ -13,10 +13,7 @@ type Tournament struct {
 	Teams []Team `gorm:"ForeignKey:TournamentID"`
 }
 
-func (tour *Tournament) CreateTeams(request TeamRequest) []Team {
-	db := InitDB()
-	defer db.Close()
-
+func (tour *Tournament) CreateTeams(db *gorm.DB, request TeamRequest) []Team {
 	teamRaw := request.Teams
 	var teams []Team
 	for _, raw := range teamRaw {
@@ -31,10 +28,7 @@ func (tour *Tournament) CreateTeams(request TeamRequest) []Team {
 	return teams
 }
 
-func (tour *Tournament) CreateMatches(teams []Team) []Match {
-	db := InitDB()
-	defer db.Close()
-
+func (tour *Tournament) CreateMatches(db *gorm.DB, teams []Team) []Match {
 	nTeam := len(teams)
 	// Add a dummy teams if number of teams is odd
 	if nTeam % 2 == 1 {
