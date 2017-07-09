@@ -113,11 +113,6 @@
               </tr>
             </tbody>
           </table>
-          <button
-            @click="shuffleMatch"
-            v-if="tourID === lastTourID"
-            class="waves-effect waves-light btn"
-          >Shuffle matches</button>
         </div>
       </div>
       <a class="waves-effect waves-light btn" href="/draw">New Tournament</a>

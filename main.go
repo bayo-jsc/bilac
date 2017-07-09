@@ -51,8 +51,6 @@ func main() {
 		v2.GET("/tournaments/:id", controllers.GetTournament)
 		v2.PATCH("/tournaments/:id/matches/:match_id", controllers.UpdateMatchScore)
 
-		v2.PATCH("/tournaments/:id/shuffle", controllers.ShuffleMatch)
-
 		//v2.GET("/members/:id/matches", getMemberMatches)
 
 		v2.GET("/tournaments/:id/matches", controllers.ListMatches)

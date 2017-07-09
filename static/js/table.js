@@ -90,15 +90,6 @@ new Vue({
         })
     },
 
-    shuffleMatch() {
-      axios.patch('/api/v2/tournaments/' + this.tourID + '/shuffle')
-        .then(res => {
-          this.getTournament()
-        }, err => {
-          console.log(err)
-        })
-    },
-
     teamName(team) {
       return `${ team.Member1.username } + ${ team.Member2.username }`
     },

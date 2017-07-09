@@ -42,19 +42,12 @@ new Vue({
       this.randomList(this.players)
     },
 
-    shuffleMatch(tourID) {
-      axios.patch('/api/v2/tournaments/' + tourID + '/shuffle')
-        .then(res => {
-          window.location.href = '/'
-        })
-    },
-
     createTournament() {
       return axios.post('/api/v2/tournaments', {
         teams: this.groupTeams(),
       })
         .then((res) => {
-          this.shuffleMatch(res.data.ID)
+          window.location.href = '/'
         }, (err) => {
           console.log(err)
         })
