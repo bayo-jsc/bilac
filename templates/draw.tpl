@@ -79,10 +79,24 @@
               </tr>
               <tr>
                 <td>
-                  <button class="waves-effect waves-light btn" type="button" v-on:click="draw">Draw</button>
+                  <button
+                    v-if="players.length > 0"
+                    v-on:click="draw"
+                    class="waves-effect waves-light btn"
+                    type="button"
+                  >
+                    Draw
+                  </button>
                 </td>
                 <td>
-                  <button class="waves-effect waves-light btn" type="button" v-on:click="createTournament">Create</button>
+                  <button
+                    v-if="players.length > 0 && isDrawed"
+                    class="waves-effect waves-light btn"
+                    type="button"
+                    v-on:click="createTournament"
+                  >
+                    Create
+                  </button>
                 </td>
               </tr>
             </tbody>
