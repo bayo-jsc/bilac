@@ -121,3 +121,11 @@
 body {
   color: #000000
 }
+
+select {
+  display: block;
+}
+
+nav .brand-logo {
+  margin-left: 10px;
+}

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Bilac</title>
 
-  <link rel="stylesheet" href="node_modules/milligram/dist/milligram.min.css">
+  <link rel="stylesheet" href="node_modules/materialize-css/dist/css/materialize.min.css">
   <link rel="stylesheet" href="static/css/app.css">
 
   <script src="node_modules/vue/dist/vue.js"></script>
@@ -16,33 +16,19 @@
 </head>
 
 <body>
-  <div class="row">
-    <div class="column">
-      Go to:
-    </div>
-    <a href="/" class="column">
-      <button class="column button button-outline">
-        Table
-      </button>
-    </a>
-
-    <a href="/draw" class="column">
-      <button class="column button button-outline">
-        Draw
-      </button>
-    </a>
-  </div>
   <div id="tf">
+    {{ template "navbar" .}}
+
     <div id="preloader">
       <div class="loader"></div>
     </div>
 
     <div class="container">
-      <h2>Members' Elo</h2>
+      <h3>Members' Elo</h3>
       
       <div class="row">
-        <div class="column">
-          <table>
+        <div class="col s12">
+          <table class="striped">
             <thead>
               <tr>
                 <th>Rank</th>
@@ -63,16 +49,10 @@
           </table>
         </div>
       </div>
+      {{ template "donate" }}
     </div>
   </div>
 
-  <small>Donate now for more future features!</small>
-  <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-    <input type="hidden" name="cmd" value="_s-xclick">
-    <input type="hidden" name="hosted_button_id" value="29B733CLFUC8U">
-    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-  </form>
 
   <script src="static/js/elo.min.js"></script>
 </body>

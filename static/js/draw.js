@@ -5,6 +5,8 @@ new Vue({
   data: {
     members: [],
     players: [],
+    isDrawed: false,
+
   },
 
   mounted() {
@@ -39,14 +41,8 @@ new Vue({
     },
 
     draw() {
-      this.randomList(this.players)
-    },
-
-    shuffleMatch(tourID) {
-      axios.patch('/api/v2/tournaments/' + tourID + '/shuffle')
-        .then(res => {
-          window.location.href = '/'
-        })
+      this.players = this.shuffle(this.players)
+      this.$set(this, 'isDrawed', true)
     },
 
     createTournament() {
@@ -54,7 +50,7 @@ new Vue({
         teams: this.groupTeams(),
       })
         .then((res) => {
-          this.shuffleMatch(res.data.ID)
+          window.location.href = '/'
         }, (err) => {
           console.log(err)
         })
@@ -73,6 +69,28 @@ new Vue({
 
     randomList(array) {
       return array.sort(() => { return 0.5 - Math.random() });
+    },
+
+    shuffle(arr) {
+      var array = arr.slice()
+      var currentIndex = array.length,
+          temporaryValue,
+          randomIndex
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex)
+        currentIndex -= 1
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex]
+        array[currentIndex] = array[randomIndex]
+        array[randomIndex] = temporaryValue
+      }
+
+      return array
     },
   }
 })

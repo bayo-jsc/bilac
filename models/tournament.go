@@ -11,19 +11,85 @@ type Tournament struct {
 	Teams []Team `gorm:"ForeignKey:TournamentID"`
 }
 
-func (tour *Tournament) ShuffleMatch() {
-  db := InitDB()
-  defer db.Close()
+func (tour *Tournament) CreateTeams(db *gorm.DB, request TeamRequest) []Team {
+	teamRaw := request.Teams
+	var teams []Team
+	for _, raw := range teamRaw {
+		team := Team {
+			TournamentID: tour.ID,
+			Member1ID: uint(raw.Member1_id),
+			Member2ID: uint(raw.Member2_id),
+		}
+		db.Create(&team)
+		teams = append(teams, team)
+	}
+	return teams
+}
 
-  var oldOrder []Match
-  db.Model(tour).Related(&oldOrder)
+func (tour *Tournament) CreateMatches(db *gorm.DB, teams []Team) []Match {
+	nTeam := len(teams)
+	// Add a dummy teams if number of teams is odd
+	if nTeam % 2 == 1 {
+		nTeam += 1
+	}
 
-  db.Model(tour).Order("RANDOM()").Related(&tour.Matches)
+	candidates := make([]int, nTeam)
+	for i := range candidates {
+		candidates[i] = i
+	}
 
-  for i, _ := range tour.Matches {
-    tour.Matches[i].GetMatchInfo(oldOrder[i])
-  }
+	var matches []Match
+	// For each round
+	for round := 1; round < nTeam; round++ {
+		// Team i in upper row
+		for i := 0; i < nTeam / 2; i++ {
+			// Team j in lower row
+			j := nTeam - i - 1
 
-  db.Save(&tour)
-  return
+			team1 := candidates[i]
+			team2 := candidates[j]
+			// Change Home/Away
+			if round % 2 == 0 {
+				team1, team2 = team2, team1
+			}
+
+			// Next if i or j is dummy team
+			if len(teams) % 2 == 1 && (team1 == nTeam - 1 || team2 == nTeam - 1) {
+				continue
+			}
+
+			match := Match {
+				TournamentID: tour.ID,
+				Team1ID: teams[team1].ID,
+				Team2ID: teams[team2].ID,
+			}
+
+			db.Create(&match)
+			matches = append(matches, match)
+		}
+
+		// Rotate candidate, follow the rule
+		// https://stackoverflow.com/questions/6648512/scheduling-algorithm-for-a-round-robin-tournament
+		tail := append(candidates[nTeam-1:], candidates[1:nTeam-1]...)
+		candidates = append(candidates[:1], tail...)
+	}
+
+	return matches
+}
+
+func (tour Tournament) Delete(db *gorm.DB) {
+	var matches []Match
+	var teams []Team
+	db.Model(tour).Related(&matches)
+	db.Model(tour).Related(&teams)
+
+	for _, match := range matches {
+		db.Delete(&match)
+	}
+
+	for _, team := range teams {
+		db.Delete(&team)
+	}
+
+	db.Delete(&tour)
 }

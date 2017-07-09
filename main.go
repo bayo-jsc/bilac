@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"github.com/gin-gonic/gin"
+	"./controllers"
 )
 
 var (
@@ -24,35 +25,41 @@ func main() {
 	router.Static("static", "./static")
 
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(200, "table.tpl", gin.H{})
+		c.HTML(200, "table.tpl", gin.H{
+			"site": "table",
+		})
 	})
 
 	router.GET("/draw", func (c *gin.Context) {
-		c.HTML(200, "draw.tpl", gin.H{})
+		c.HTML(200, "draw.tpl", gin.H{
+			"site": "draw",
+		})
 	})
 
 	router.GET("/elo", func (c *gin.Context) {
-		c.HTML(200, "elo.tpl", gin.H{})
+		c.HTML(200, "elo.tpl", gin.H{
+			"site": "elo",
+		})
 	})
 
 	// API v2 routers
 	v2 := router.Group("/api/v2")
 	{
-		v2.GET("/members", listMembers)
-		v2.POST("/members", createMember)
-		v2.GET("/members/:id", showMember)
-		v2.PATCH("/members/:id", updateMember)
-		v2.DELETE("/members/:id", destroyMember)
+		v2.GET("/members", controllers.ListMembers)
+		v2.POST("/members", controllers.CreateMember)
+		v2.GET("/members/:id", controllers.ShowMember)
+		v2.PATCH("/members/:id", controllers.UpdateMember)
+		v2.DELETE("/members/:id", controllers.DestroyMember)
 
-		v2.GET("/tournaments", listTournaments)
-		v2.POST("/tournaments", createTournament)
+		v2.GET("/tournaments", controllers.ListTournaments)
+		v2.POST("/tournaments", controllers.CreateTournament)
 
-		v2.GET("/tournaments/:id", getTournament)
-		v2.PATCH("/tournaments/:id/matches/:match_id", updateMatchScore)
-
-		v2.PATCH("/tournaments/:id/shuffle", shuffleMatch)
+		v2.GET("/tournaments/:id", controllers.GetTournament)
+		v2.PATCH("/tournaments/:id/matches/:match_id", controllers.UpdateMatchScore)
 
 		//v2.GET("/members/:id/matches", getMemberMatches)
+
+		v2.GET("/tournaments/:id/matches", controllers.ListMatches)
 	}
 
 	router.Run(":" + BILAC_PORT)

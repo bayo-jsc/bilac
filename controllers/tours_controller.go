@@ -1,13 +1,13 @@
-package main
+package controllers
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 
-	"./models"
+	"../models"
 )
 
-func listTournaments(c *gin.Context) {
+func ListTournaments(c *gin.Context) {
 	db := models.InitDB()
 	defer db.Close()
 
@@ -17,7 +17,7 @@ func listTournaments(c *gin.Context) {
 	c.JSON(200, tours)
 }
 
-func getTournament(c *gin.Context) {
+func GetTournament(c *gin.Context) {
 	db := models.InitDB()
 	defer db.Close()
 
@@ -31,14 +31,13 @@ func getTournament(c *gin.Context) {
 	c.JSON(200, tour)
 }
 
-func createTournament(c *gin.Context) {
+func CreateTournament(c *gin.Context) {
 	db := models.InitDB()
 	defer db.Close()
 
 	var request models.TeamRequest
 
 	c.BindJSON(&request)
-	teams_raw := request.Teams
 
 	tour := models.Tournament{}
 	db.Create(&tour)
@@ -46,50 +45,17 @@ func createTournament(c *gin.Context) {
 		c.JSON(500, gin.H{"error": err})
 	} else {
 		// Create teams
-		for i := 0; i < len(teams_raw); i++ {
-			team := models.Team {
-				TournamentID: tour.ID,
-				Member1ID: uint(teams_raw[i].Member1_id),
-				Member2ID: uint(teams_raw[i].Member2_id),
-			}
-			db.Create(&team)
-		}
+		var teams []models.Team
+		teams = tour.CreateTeams(db, request)
 
 		// Create matches
-		var teams []models.Team
-		db.Model(&tour).Related(&teams)
-		for i := 0; i < len(teams)-1; i++ {
-			for j := i + 1; j < len(teams); j++ {
-				match := models.Match {
-					TournamentID: tour.ID,
-					Team1ID: teams[i].ID,
-					Team2ID: teams[j].ID,
-				}
+		tour.CreateMatches(db, teams)
 
-				db.Create(&match)
-			}
-		}
-		// Shuffle Match
-		db.Model(tour).Related(&tour.Matches)
-		tour.ShuffleMatch()
 		c.JSON(201, tour)
 	}
 }
 
-func shuffleMatch(c *gin.Context) {
-	db := models.InitDB()
-	defer db.Close()
-
-	tour_id := c.Params.ByName("id")
-	var tour models.Tournament
-	db.Find(&tour, tour_id)
-
-	tour.ShuffleMatch()
-
-	c.JSON(200, tour)
-}
-
-func updateMatchScore(c *gin.Context)  {
+func UpdateMatchScore(c *gin.Context)  {
 	db := models.InitDB()
 	defer db.Close()
 
@@ -110,9 +76,9 @@ func updateMatchScore(c *gin.Context)  {
 	if err := db.Save(&match).Error; err == nil {
 		team1 := match.Team1
 		team2 := match.Team2
-		team1.UpdateTeamScore()
-		team2.UpdateTeamScore()
-		match.UpdateElo()
+		team1.UpdateTeamScore(db)
+		team2.UpdateTeamScore(db)
+		match.UpdateElo(db)
 		c.JSON(201, match)
 	} else {
 		c.JSON(500, gin.H{"error": err})

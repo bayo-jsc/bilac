@@ -49,30 +49,8 @@ new Vue({
         .then(res => {
           const data = res.data
 
-          let matches = data.Matches.map(match => {
-            return {
-              ID: match.ID,
-              team1ID: match.Team1ID,
-              team2ID: match.Team2ID,
-              team1Score: match.Team1Score,
-              team2Score: match.Team2Score,
-            }
-          })
-
-          let teams = data.Teams.map(team => {
-            return {
-              ID: team.ID,
-              name: team.Member1.username + " + " + team.Member2.username,
-              GF: team.GF,
-              GA: team.GA,
-              GD: team.GD,
-              Points: team.Points,
-              PlayedMatches: team.PlayedMatches,
-            }
-          })
-
-          this.$set(this, 'teams', teams)
-          this.$set(this, 'matches', matches)
+          this.$set(this, 'teams', data.Teams)
+          this.$set(this, 'matches', data.Matches)
 
         }, err => {
           console.log(err)
@@ -86,15 +64,15 @@ new Vue({
     },
 
     findTeamWithID(teamID) {
-      return this.teams.find(x => x.ID == teamID)
+      return this.teams.find(x => x.ID === teamID)
     },
 
     showScoreUpdate(match) {
-      this.$set(this, 'team1Name', this.findTeamWithID(match.team1ID).name)
-      this.$set(this, 'team2Name', this.findTeamWithID(match.team2ID).name)
+      this.$set(this, 'team1Name', this.teamName(this.findTeamWithID(match.Team1ID)))
+      this.$set(this, 'team2Name', this.teamName(this.findTeamWithID(match.Team2ID)))
 
-      this.$set(this, 'score1', Math.max(0, match.team1Score))
-      this.$set(this, 'score2', Math.max(0, match.team2Score))
+      this.$set(this, 'score1', Math.max(0, match.Team1Score))
+      this.$set(this, 'score2', Math.max(0, match.Team2Score))
       this.$set(this, 'matchID', match.ID)
       this.$set(this, 'showModal', true)
     },
@@ -112,13 +90,40 @@ new Vue({
         })
     },
 
-    shuffleMatch() {
-      axios.patch('/api/v2/tournaments/' + this.tourID + '/shuffle')
-        .then(res => {
-          this.getTournament()
-        }, err => {
-          console.log(err)
-        })
-    }
+    matchFinished(match) {
+      return (match.Team1Score == -1 || match.Team2Score == -1) ? false : true
+    },
+
+    teamName(team) {
+      return `${ team.Member1.username } + ${ team.Member2.username }`
+    },
+
+    memberWithElo(mem, eloChange, finished) {
+      return `${ mem.username }` + (finished ? `(${ eloChange })` : '')
+    },
+
+    team1NameWithElo(match) {
+      const team = this.findTeamWithID(match.Team1ID)
+      const mem1Change = match.Mem1EloAfter - match.Mem1EloBefore
+      const mem2Change = match.Mem2EloAfter - match.Mem2EloBefore
+      const finished = this.matchFinished(match)
+
+      return `${ this.memberWithElo(team.Member1, mem1Change, finished) } + 
+              ${ this.memberWithElo(team.Member2, mem2Change, finished) }`
+    },
+
+    team2NameWithElo(match) {
+      const team = this.findTeamWithID(match.Team2ID)
+      const mem3Change = match.Mem3EloAfter - match.Mem3EloBefore
+      const mem4Change = match.Mem4EloAfter - match.Mem4EloBefore
+      const finished = this.matchFinished(match)
+
+      return `${ this.memberWithElo(team.Member1, mem3Change, finished) } + 
+              ${ this.memberWithElo(team.Member2, mem4Change, finished) }`
+    },
+
+    evalScore(score) {
+      return score === -1 ? 'TBD' : score
+    },
   },
 })

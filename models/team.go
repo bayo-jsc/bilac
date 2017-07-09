@@ -38,8 +38,7 @@ func getPoint(x, y int) int {
 	return 1
 }
 
-func (team Team) UpdateTeamScore() {
-	db := InitDB()
+func (team Team) UpdateTeamScore(db *gorm.DB) {
 	team.GF, team.GA, team.Points, team.PlayedMatches = 0, 0, 0, 0
 
 	var tour Tournament
@@ -65,19 +64,19 @@ func (team Team) UpdateTeamScore() {
 	db.Save(&team)
 }
 
-func (team Team) AvgElo() float64 {
-	db := InitDB()
-	defer db.Close()
-
+func (team *Team) LoadMembers(db *gorm.DB) {
 	db.Preload("Member1").Preload("Member2").Find(&team, team.ID)
+}
+
+func (team Team) AvgElo(db *gorm.DB) float64 {
+	if &team.Member1 == nil || &team.Member2 == nil {
+		db.Preload("Member1").Preload("Member2").Find(&team, team.ID)
+	}
 
 	return float64(team.Member1.Elo + team.Member2.Elo) / 2
 }
 
-func (team Team) UpdateElo(elo float64) {
-	db := InitDB()
-	defer db.Close()
-
+func (team Team) UpdateElo(db *gorm.DB, elo float64) {
 	db.Preload("Member1").Preload("Member2").Find(&team, team.ID)
 	smallRatio := math.Min(float64(team.Member1.Elo), float64(team.Member2.Elo)) /
 						float64(team.Member1.Elo + team.Member2.Elo)
@@ -99,6 +98,6 @@ func (team Team) UpdateElo(elo float64) {
 
 	//team1Ratio := 0.5
 	//fmt.Printf("%.2f %.2f\n", elo, team1Ratio)
-	team.Member1.AddElo(int(2 * elo * team1Ratio))
-	team.Member2.AddElo(int(2 * elo * (1 - team1Ratio)))
+	team.Member1.AddElo(db, int(2 * elo * team1Ratio))
+	team.Member2.AddElo(db, int(2 * elo * (1 - team1Ratio)))
 }
