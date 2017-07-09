@@ -25,15 +25,21 @@ func main() {
 	router.Static("static", "./static")
 
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(200, "table.tpl", gin.H{})
+		c.HTML(200, "table.tpl", gin.H{
+			"site": "table",
+		})
 	})
 
 	router.GET("/draw", func (c *gin.Context) {
-		c.HTML(200, "draw.tpl", gin.H{})
+		c.HTML(200, "draw.tpl", gin.H{
+			"site": "draw",
+		})
 	})
 
 	router.GET("/elo", func (c *gin.Context) {
-		c.HTML(200, "elo.tpl", gin.H{})
+		c.HTML(200, "elo.tpl", gin.H{
+			"site": "elo",
+		})
 	})
 
 	// API v2 routers

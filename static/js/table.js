@@ -108,7 +108,7 @@ new Vue({
       const mem2Change = match.Mem2EloAfter - match.Mem2EloBefore
       const finished = this.matchFinished(match)
 
-      return `${ this.memberWithElo(team.Member1, mem1Change, finished) } 
+      return `${ this.memberWithElo(team.Member1, mem1Change, finished) }
               ${ this.memberWithElo(team.Member2, mem2Change, finished) }`
     },
 

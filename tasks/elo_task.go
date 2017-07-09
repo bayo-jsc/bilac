@@ -24,6 +24,6 @@ func main() {
 
 	fmt.Printf("Updating elo\n")
 	for _, match := range matches  {
-		match.UpdateElo()
+		match.UpdateElo(db)
 	}
 }
