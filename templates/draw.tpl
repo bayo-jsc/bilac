@@ -8,39 +8,28 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Bilac</title>
 
-  <link rel="stylesheet" href="node_modules/milligram/dist/milligram.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="node_modules/materialize-css/dist/css/materialize.min.css">
   <link rel="stylesheet" href="static/css/app.css">
 
   <script src="node_modules/vue/dist/vue.js"></script>
   <script src="node_modules/axios/dist/axios.min.js"></script>
 </head>
 <body>
-  <div class="row">
-    <div class="column">
-      Go to:
-    </div>
-    <a href="/" class="column">
-      <button class="column button button-outline">
-        Table
-      </button>
-    </a>
-
-    <a href="/elo" class="column">
-      <button class="column button button-outline">
-        Elo
-      </button>
-    </a>
-  </div>
-
   <div id="tf">
     <div id="preloader">
       <div class="loader"></div>
     </div>
 
+    {{ template "navbar" . }}
+
     <div class="container">
       <div class="row">
-        <div class="column">
-          <table>
+        <h3>Choose player to draw</h3>
+      </div>
+      <div class="row">
+        <div class="col m6">
+          <table class="striped">
             <thead>
               <tr>
                 <th>ID</th>
@@ -56,15 +45,17 @@
                 <td>${ mem.ID }</td>
                 <td>${ mem.username }</td>
                 <td>
-                  <button class="button button-clear" v-on:click="addPlayer(index)">+ Add</button>
+                  <button class="waves-effect waves-light green btn" v-on:click="addPlayer(index)">
+                    Add<i class="material-icons right">add</i>
+                  </button>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div class="column">
-          <table>
+        <div class="col m6">
+          <table class="striped">
             <thead>
               <tr>
                 <th>Team ID</th>
@@ -81,29 +72,26 @@
                 <td>${ Math.trunc(index / 2) + 1 }</td>
                 <td>${ player.username }</td>
                 <td>
-                  <button class="button button-clear" v-on:click="removePlayer(index)">x Remove</button>
+                  <button class="waves-effect waves-light red btn" v-on:click="removePlayer(index)">
+                    Remove<i class="material-icons right">delete</i>
+                  </button>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <button class="button button-default" type="button" v-on:click="draw">Draw</button>
-                  <button class="button button-default" type="button" v-on:click="createTournament">Create Tournament</button>
+                  <button class="waves-effect waves-light btn" type="button" v-on:click="draw">Draw</button>
+                </td>
+                <td>
+                  <button class="waves-effect waves-light btn" type="button" v-on:click="createTournament">Create</button>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
+      {{ template "donate" }}
     </div>
   </div>
-
-  <small>Donate now for more future features!</small>
-  <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-    <input type="hidden" name="cmd" value="_s-xclick">
-    <input type="hidden" name="hosted_button_id" value="29B733CLFUC8U">
-    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-  </form>
 
   <script src="static/js/draw.min.js"></script>
 </body>

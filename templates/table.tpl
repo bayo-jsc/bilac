@@ -20,17 +20,8 @@
       <div class="loader"></div>
     </div>
 
-    <!-- <nav>
-      <div class="nav-wrapper">
-        <a href="/" class="brand-logo left">Bayo Bilac</a>
-        <ul class="right">
-          <li class="active"><a href="/">Table</a></li>
-          <li><a href="/elo">Elo</a></li>
-          <li><a href="/draw">Draw</a></li>
-        </ul>
-      </div>
-    </nav> -->
     {{ template "navbar" . }}
+
     <div class="container">
 
       <div class="row">
