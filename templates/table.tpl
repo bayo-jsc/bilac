@@ -62,6 +62,7 @@
             <tbody>
               <tr
                 v-for="team, index in teams"
+                :style="{'background-color': teamLength > 2 && color[teamLength - index - 1]}"
               >
                 <td>${ index + 1 }</td>
                 <td>${ teamName(team) }</td>
