@@ -43,9 +43,13 @@
                 v-for="member, index in members"
                 :style="{ 'background-color': color[index] }"
               >
-                <td v-if="index !== 0">${ index + 1 }</td>
-                <td v-else>
-                  <img src="https://elearningimages.adobe.com/files/2011/05/First.jpg" height="50px">
+                <td>
+                  ${ index + 1 }              
+                  <img 
+                    v-if="index === 0"
+                    src="http://images.all-free-download.com/images/graphicthumb/champion_cup_and_medals_design_vector_set_522844.jpg" 
+                    height="30px"
+                  >
                 </td>
                 <td>${ member.username }</td>
                 <td>${ member.elo }</td>
