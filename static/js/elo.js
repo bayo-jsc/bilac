@@ -4,6 +4,7 @@ new Vue({
 
   data: {
     members: [],
+    color: ['red', 'yellow', 'pink']
   },
 
   mounted() {

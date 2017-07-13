@@ -41,8 +41,12 @@
             <tbody>
               <tr
                 v-for="member, index in members"
+                :style="{ 'background-color': color[index] }"
               >
-                <td>${ index + 1 }</td>
+                <td v-if="index !== 0">${ index + 1 }</td>
+                <td v-else>
+                  <img src="https://elearningimages.adobe.com/files/2011/05/First.jpg" height="50px">
+                </td>
                 <td>${ member.username }</td>
                 <td>${ member.elo }</td>
                 <td>${ member.elo > 1023 ? 11 : 10 }</td>
