@@ -69,11 +69,11 @@ func (match Match) UpdateElo(db *gorm.DB) {
 
 	// Real scores
 	var s1, s2 float64
-	if match.Team1Score >= match.Team2Score {
-		s1 = float64(match.Team1Score) / float64(match.Team1Score + match.Team2Score)
-		s2 = 1 - s1
+	if match.Team1Score == 0 &&  match.Team2Score == 0 {
+		s1 = 0.5
+		s2 = 0.5
 	} else {
-		s1 = 1 - float64(match.Team2Score) / float64(match.Team1Score + match.Team2Score)
+		s1 = float64(match.Team1Score) / float64(match.Team1Score + match.Team2Score)
 		s2 = 1 - s1
 	}
 
