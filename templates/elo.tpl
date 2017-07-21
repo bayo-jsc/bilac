@@ -28,7 +28,7 @@
       
       <div class="row">
         <div class="col s12">
-          <table class="striped">
+          <table class="bordered">
             <thead>
               <tr>
                 <th>Rank</th>
@@ -41,8 +41,11 @@
             <tbody>
               <tr
                 v-for="member, index in members"
+                :style="{ 'background-color': color[index] }"
               >
-                <td>${ index + 1 }</td>
+                <td>
+                  ${ index + 1 }              
+                </td>
                 <td>${ member.username }</td>
                 <td>${ member.elo }</td>
                 <td>${ member.elo > 1023 ? 11 : 10 }</td>
