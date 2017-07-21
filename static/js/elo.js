@@ -4,7 +4,7 @@ new Vue({
 
   data: {
     members: [],
-    color: ['#26C6DA', '#4DD0E1', '#80DEEA', '#B2EBF2']
+    color: ['#4dd0e1', '#80deea', '#b2ebf2', '#e0f7fa']
   },
 
   mounted() {

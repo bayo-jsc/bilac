@@ -28,7 +28,7 @@
       
       <div class="row">
         <div class="col s12">
-          <table class="striped">
+          <table class="bordered">
             <thead>
               <tr>
                 <th>Rank</th>
@@ -45,11 +45,6 @@
               >
                 <td>
                   ${ index + 1 }              
-                  <img 
-                    v-if="index === 0"
-                    src="http://images.all-free-download.com/images/graphicthumb/champion_cup_and_medals_design_vector_set_522844.jpg" 
-                    height="30px"
-                  >
                 </td>
                 <td>${ member.username }</td>
                 <td>${ member.elo }</td>
