@@ -14,6 +14,13 @@ new Vue({
     score1: 0,
     score2: 0,
     showModal: false,
+    color: ['red', 'yellow'],
+  },
+
+  computed: {
+    teamLength() {
+      return this.teams.length
+    },
   },
 
   mounted() {
